@@ -1,6 +1,6 @@
 #include <QApplication>
 #include <QMainWindow>
-#include "ui_iface.h"
+#include "ui_editor.h"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
