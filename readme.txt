@@ -13,7 +13,7 @@
 Спецэффкет "(Волна | Стекло)": -
 Произвольное ядро: -
 
-Система: Geany + g++ + CMake
+Система: Geany, g++, CMake, Qt Designer
 ОС: Ubuntu 11.04
 Аппаратура: Intel Core 2 Duo 1.3GHz, 3Gb, nVidia GeForce G210M 512Mb
 
