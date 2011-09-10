@@ -3,11 +3,11 @@
 #include "ui_iface.h"
 
 int main(int argc, char *argv[]) {
-    QApplication app(argc, argv[])
+    QApplication app(argc, argv);
 
     Ui::EditorWindow editorWindow;
     QMainWindow *window = new QMainWindow;
-    editorWindow.setupUi(window)
+    editorWindow.setupUi(window);
     window->show();
 
     return app.exec();
