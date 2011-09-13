@@ -8,3 +8,8 @@ void ImageScene::setEmptyMode() {
     this->clear();
     this->addText(tr("Load image"));
 }
+
+void ImageScene::setImageMode(const QPixmap &image) {
+    this->clear();
+    this->addPixmap(image);
+}

@@ -12,6 +12,9 @@ class EditorWindow: public QMainWindow {
 
     ImageScene *imageScene;
 
+  public slots:
+    void openImage();
+
   public:
     EditorWindow(QWidget *parent = NULL);
     ~EditorWindow();

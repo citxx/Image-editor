@@ -2,6 +2,7 @@
 #define IMAGE_SCENE_HPP
 
 #include <QWidget>
+#include <QPixmap>
 #include <QGraphicsScene>
 
 class ImageScene: public QGraphicsScene {
@@ -11,6 +12,7 @@ class ImageScene: public QGraphicsScene {
     ImageScene(QWidget *parent = NULL);
 
     void setEmptyMode();
+    void setImageMode(const QPixmap &image);
 };
 
 #endif  // IMAGE_SCENE_HPP
