@@ -11,4 +11,5 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
 
 EditorWindow::~EditorWindow() {
     delete this->ui;
+    delete this->imageScene;
 }
