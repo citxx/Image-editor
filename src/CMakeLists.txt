@@ -7,8 +7,8 @@ FIND_PACKAGE(Qt4 REQUIRED)
 INCLUDE(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 
-set(SOURCES main.cpp EditorWindow.cpp ImageScene.cpp)
-set(MOC_HEADERS EditorWindow.hpp ImageScene.hpp)
+set(SOURCES main.cpp EditorWindow.cpp ImageScene.cpp Processing.cpp)
+set(MOC_HEADERS EditorWindow.hpp ImageScene.hpp Processing.hpp)
 set(FORMS EditorWindow.ui)
 
 QT4_WRAP_CPP(HEADERS ${MOC_HEADERS})

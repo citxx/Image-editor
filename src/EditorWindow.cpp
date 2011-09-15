@@ -1,4 +1,5 @@
 #include "EditorWindow.hpp"
+#include "Processing.hpp"
 #include "ui_EditorWindow.h"
 
 #include <QFileDialog>
@@ -14,6 +15,8 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->connect(this->ui->actionClose,  SIGNAL(activated()), this, SLOT(closeImage()));
     this->connect(this->ui->actionSave,   SIGNAL(activated()), this, SLOT(saveImage()));
     this->connect(this->ui->actionSaveAs, SIGNAL(activated()), this, SLOT(saveImageAs()));
+
+    this->connect(this->ui->actionContrastLinear, SIGNAL(activated()), this, SLOT(linearContrastCorrection()));
 }
 
 EditorWindow::~EditorWindow() {
@@ -68,4 +71,9 @@ void EditorWindow::saveImageAs() {
         this->currentImage.save(fileName);
         this->currentImageFileName = fileName;
     }
+}
+
+void EditorWindow::linearContrastCorrection() {
+    this->currentImage = Processing::linearContrastCorrection(this->currentImage);
+    this->imageScene->setImageMode(QPixmap::fromImage(this->currentImage));
 }

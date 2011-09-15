@@ -24,6 +24,8 @@ class EditorWindow: public QMainWindow {
     void saveImage();
     void saveImageAs();
 
+    void linearContrastCorrection();
+
   public:
     EditorWindow(QWidget *parent = NULL);
     ~EditorWindow();
