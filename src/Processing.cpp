@@ -21,7 +21,8 @@ QImage Processing::linearContrastCorrection(const QImage &img) {
         }
     }
 
-    qDebug() << minBrightness << ' ' << maxBrightness;
+    qDebug() << "Linear contrast correction: minBrightness(" << minBrightness <<
+                ") maxBrightness(" << maxBrightness << ")";
 
     QImage answer(img.width(), img.height(), img.format());
     for (int x = 0; x < img.width(); x++) {
