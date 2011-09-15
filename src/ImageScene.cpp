@@ -6,7 +6,7 @@ ImageScene::ImageScene(QWidget *parent): QGraphicsScene(parent) {
 
 void ImageScene::setEmptyMode() {
     this->clear();
-    this->addText(tr("Load image"));
+    this->addText(tr("Load an image"));
 }
 
 void ImageScene::setImageMode(const QPixmap &image) {
