@@ -40,7 +40,7 @@
     <addaction name="actionClose"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
-    <addaction name="actionSave_as"/>
+    <addaction name="actionSaveAs"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -63,7 +63,7 @@
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionSave_as">
+  <action name="actionSaveAs">
    <property name="text">
     <string>Save as ...</string>
    </property>
