@@ -18,6 +18,8 @@ class EditorWindow: public QMainWindow {
 
     QString chooseImageFile(QFileDialog::FileMode);  // TODO: make static
 
+    void replaceImage(const QImage &img);
+
   public slots:
     void openImage();
     void closeImage();
@@ -25,6 +27,7 @@ class EditorWindow: public QMainWindow {
     void saveImageAs();
 
     void linearContrastCorrection();
+    void rgbContrastCorrection();
 
   public:
     EditorWindow(QWidget *parent = NULL);

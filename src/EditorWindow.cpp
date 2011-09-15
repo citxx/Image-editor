@@ -17,6 +17,7 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->connect(this->ui->actionSaveAs, SIGNAL(activated()), this, SLOT(saveImageAs()));
 
     this->connect(this->ui->actionContrastLinear, SIGNAL(activated()), this, SLOT(linearContrastCorrection()));
+    this->connect(this->ui->actionContrastRGB, SIGNAL(activated()), this, SLOT(rgbContrastCorrection()));
 }
 
 EditorWindow::~EditorWindow() {
@@ -36,6 +37,11 @@ QString EditorWindow::chooseImageFile(QFileDialog::FileMode mode) {
     else {
         return QString();
     }
+}
+
+void EditorWindow::replaceImage(const QImage &img) {
+    this->currentImage = img;
+    this->imageScene->setImageMode(QPixmap::fromImage(img));
 }
 
 void EditorWindow::openImage() {
@@ -74,6 +80,9 @@ void EditorWindow::saveImageAs() {
 }
 
 void EditorWindow::linearContrastCorrection() {
-    this->currentImage = Processing::linearContrastCorrection(this->currentImage);
-    this->imageScene->setImageMode(QPixmap::fromImage(this->currentImage));
+    this->replaceImage(Processing::linearContrastCorrection(this->currentImage));
+}
+
+void EditorWindow::rgbContrastCorrection() {
+    this->replaceImage(Processing::rgbContrastCorrection(this->currentImage));
 }
