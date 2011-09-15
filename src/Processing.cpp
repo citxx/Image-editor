@@ -33,10 +33,10 @@ QImage Processing::linearContrastCorrection(const QImage &img) {
     for (int x = 0; x < img.width(); x++) {
         for (int y = 0; y < img.height(); y++) {
             QRgb color = img.pixel(x, y);
-            int r = expand(minBrightness, maxBrightness, qRed(color));
-            int g = expand(minBrightness, maxBrightness, qGreen(color));
-            int b = expand(minBrightness, maxBrightness, qBlue(color));
-            answer.setPixel(x, y, qRgb(r, g, b));
+            qreal br = brightness(color);
+            qreal new_br = expand(minBrightness, maxBrightness, br);
+            qreal c = new_br / br;
+            answer.setPixel(x, y, qRgb(c * qRed(color), c * qGreen(color), c * qBlue(color)));
         }
     }
 
