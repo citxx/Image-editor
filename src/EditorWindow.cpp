@@ -10,7 +10,8 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->imageScene = new ImageScene;
     this->ui->imageView->setScene(this->imageScene);
 
-    this->connect(this->ui->actionOpen, SIGNAL(activated()), this, SLOT(openImage()));
+    this->connect(this->ui->actionOpen,  SIGNAL(activated()), this, SLOT(openImage()));
+    this->connect(this->ui->actionClose, SIGNAL(activated()), this, SLOT(closeImage()));
 }
 
 EditorWindow::~EditorWindow() {
@@ -28,7 +29,17 @@ void EditorWindow::openImage() {
     if (imageChooser.exec()) {
         fileName = imageChooser.selectedFiles().at(0);
 
-        QPixmap image(fileName);
-        this->imageScene->setImageMode(image);
+        if (!this->currentImage.isNull()) {
+            this->closeImage();
+        }
+        this->currentImage = QImage(fileName);
+        this->imageScene->setImageMode(QPixmap::fromImage(this->currentImage));
     }
+}
+
+void EditorWindow::closeImage() {
+    // TODO: The dialog asking if the user want to save the image
+
+    this->currentImage = QImage();
+    this->imageScene->setEmptyMode();
 }
