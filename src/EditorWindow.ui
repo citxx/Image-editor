@@ -52,15 +52,25 @@
      <property name="title">
       <string>Contrast correction</string>
      </property>
-     <addaction name="actionLinear"/>
-     <addaction name="actionRGB"/>
+     <addaction name="actionContrastLinear"/>
+     <addaction name="actionContrastRGB"/>
+    </widget>
+    <widget class="QMenu" name="menuFilters">
+     <property name="title">
+      <string>Filters</string>
+     </property>
+     <addaction name="actionCustomFilter"/>
+     <addaction name="separator"/>
     </widget>
     <addaction name="menuContrast_correction"/>
+    <addaction name="menuFilters"/>
    </widget>
    <widget class="QMenu" name="menuTransform">
     <property name="title">
      <string>Transform</string>
     </property>
+    <addaction name="actionRotate"/>
+    <addaction name="actionScale"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuImage"/>
@@ -104,14 +114,35 @@
     <string>Close</string>
    </property>
   </action>
-  <action name="actionLinear">
+  <action name="actionContrastLinear">
    <property name="text">
     <string>Linear</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
   </action>
-  <action name="actionRGB">
+  <action name="actionContrastRGB">
    <property name="text">
     <string>RGB</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionCustomFilter">
+   <property name="text">
+    <string>Custom</string>
+   </property>
+  </action>
+  <action name="actionRotate">
+   <property name="text">
+    <string>Rotate</string>
+   </property>
+  </action>
+  <action name="actionScale">
+   <property name="text">
+    <string>Scale</string>
    </property>
   </action>
  </widget>
