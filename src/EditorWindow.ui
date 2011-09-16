@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EditorWindow</class>
+ <widget class="QMainWindow" name="EditorWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>746</width>
+    <height>509</height>
+   </rect>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::DefaultContextMenu</enum>
+  </property>
+  <property name="windowTitle">
+   <string>Image editor</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QGraphicsView" name="imageView"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>746</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionClose"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuImage">
+    <property name="title">
+     <string>Image</string>
+    </property>
+    <widget class="QMenu" name="menuContrast_correction">
+     <property name="title">
+      <string>Contrast correction</string>
+     </property>
+     <addaction name="actionContrastLinear"/>
+     <addaction name="actionContrastRGB"/>
+    </widget>
+    <widget class="QMenu" name="menuFilters">
+     <property name="title">
+      <string>Filters</string>
+     </property>
+     <addaction name="actionCustomFilter"/>
+     <addaction name="separator"/>
+    </widget>
+    <addaction name="menuContrast_correction"/>
+    <addaction name="menuFilters"/>
+   </widget>
+   <widget class="QMenu" name="menuTransform">
+    <property name="title">
+     <string>Transform</string>
+    </property>
+    <addaction name="actionRotate"/>
+    <addaction name="actionScale"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuImage"/>
+   <addaction name="menuTransform"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="text">
+    <string>Save as ...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionContrastLinear">
+   <property name="text">
+    <string>Linear</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="actionContrastRGB">
+   <property name="text">
+    <string>RGB</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionCustomFilter">
+   <property name="text">
+    <string>Custom</string>
+   </property>
+  </action>
+  <action name="actionRotate">
+   <property name="text">
+    <string>Rotate</string>
+   </property>
+  </action>
+  <action name="actionScale">
+   <property name="text">
+    <string>Scale</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>actionQuit</sender>
+   <signal>activated()</signal>
+   <receiver>EditorWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
