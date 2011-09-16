@@ -8,6 +8,7 @@ FilterDialog::FilterDialog(QWidget *parent): QDialog(parent) {
     this->connect(this->ui.spinBoxWidth, SIGNAL(valueChanged(int)), this, SLOT(resizeWidth(int)));
     this->connect(this->ui.spinBoxHeight, SIGNAL(valueChanged(int)), this, SLOT(resizeHeight(int)));
     this->connect(this->ui.pushButtonApply, SIGNAL(released()), this, SLOT(apply()));
+    this->connect(this->ui.pushButtonApplyNormalized, SIGNAL(released()), this, SLOT(applyNormalized()));
     this->connect(this->ui.pushButtonCancel, SIGNAL(released()), this, SLOT(cancel()));
 }
 
@@ -79,6 +80,22 @@ void FilterDialog::resizeHeight(int height) {
 }
 
 void FilterDialog::apply() {
+    this->result.resize(this->inputMatrix.size());
+
+    for (int i = 0; i < this->result.size(); i++) {
+        this->result[i].resize(this->inputMatrix[i].size());
+    }
+
+    for (int i = 0; i < this->result.size(); i++) {
+        for (int j = 0; j < this->result[i].size(); j++) {
+            this->result[i][j] = this->inputMatrix[i][j]->value();
+        }
+    }
+
+    this->done(QDialog::Accepted);
+}
+
+void FilterDialog::applyNormalized() {
     this->result.resize(this->inputMatrix.size());
 
     for (int i = 0; i < this->result.size(); i++) {

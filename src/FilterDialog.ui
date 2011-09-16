@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>502</width>
-    <height>271</height>
+    <width>615</width>
+    <height>359</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -104,6 +104,13 @@
       <widget class="QPushButton" name="pushButtonApply">
        <property name="text">
         <string>Apply</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonApplyNormalized">
+       <property name="text">
+        <string>Apply Normalized</string>
        </property>
       </widget>
      </item>

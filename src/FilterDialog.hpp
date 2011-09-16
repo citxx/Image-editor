@@ -26,6 +26,7 @@ class FilterDialog: public QDialog {
     void normalize();
 
     void apply();
+    void applyNormalized();
     void cancel();
 
   public:
