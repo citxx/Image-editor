@@ -10,7 +10,7 @@
 class EditorWindow: public QMainWindow {
     Q_OBJECT
 
-    Ui::EditorWindow *ui;
+    Ui::EditorWindow ui;
 
     QImage currentImage;
     QString currentImageFileName;
@@ -28,6 +28,8 @@ class EditorWindow: public QMainWindow {
 
     void linearContrastCorrection();
     void rgbContrastCorrection();
+
+    void applyFilter();
 
   public:
     EditorWindow(QWidget *parent = NULL);

@@ -1,5 +1,7 @@
 #include "Processing.hpp"
 #include <QtGlobal>
+#include <QPoint>
+#include <QRect>
 #include <QDebug>
 
 qreal brightness(QRgb color) {
@@ -68,7 +70,7 @@ QImage Processing::rgbContrastCorrection(const QImage &img) {
     qDebug() << "RGB contrast correction: minG(" << minG <<") maxG(" << maxG << ")";
     qDebug() << "RGB contrast correction: minB(" << minB <<") maxB(" << maxB << ")";
 
-    QImage answer(img.width(), img.height(), img.format());
+    QImage answer(img.size(), img.format());
     for (int x = 0; x < img.width(); x++) {
         for (int y = 0; y < img.height(); y++) {
             QRgb color = img.pixel(x, y);
@@ -82,6 +84,36 @@ QImage Processing::rgbContrastCorrection(const QImage &img) {
     return answer;
 }
 
+QRgb applyToPoint(int x, int y, const QImage &img, const Processing::Filter &kernel) {
+    int filterWidth = kernel.size();
+    int filterHeight = kernel[0].size();
+
+    qreal resultR = 0.0, resultG = 0.0, resultB = 0.0;
+    for (int fx = 0; fx < filterWidth; fx++) {
+        for (int fy = 0; fy < filterHeight; fy++) {
+            int imgX = qBound(0, x + (fx - filterWidth / 2), img.width() - 1);
+            int imgY = qBound(0, y + (fy - filterHeight / 2), img.height() - 1);
+            QRgb color = img.pixel(imgX, imgY);
+            resultR += kernel[fx][fy] * qRed(color);
+            resultG += kernel[fx][fy] * qGreen(color);
+            resultB += kernel[fx][fy] * qBlue(color);
+        }
+    }
+
+    int r = qBound(0, (int)resultR, 255);
+    int g = qBound(0, (int)resultG, 255);
+    int b = qBound(0, (int)resultB, 255);
+    return qRgb(r, g, b);
+}
+
 QImage Processing::applyFilter(const QImage &img, const Processing::Filter &kernel) {
-    // TODO: implement
+    QImage answer(img.size(), img.format());
+
+    for (int x = 0; x < img.width(); x++) {
+        for (int y = 0; y < img.height(); y++) {
+            answer.setPixel(x, y, applyToPoint(x, y, img, kernel));
+        }
+    }
+
+    return answer;
 }

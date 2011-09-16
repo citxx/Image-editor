@@ -1,27 +1,27 @@
 #include "EditorWindow.hpp"
 #include "Processing.hpp"
+#include "FilterDialog.hpp"
 #include "ui_EditorWindow.h"
 
 #include <QFileDialog>
 
 EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
-    this->ui = new Ui::EditorWindow;
-    this->ui->setupUi(this);
+    this->ui.setupUi(this);
 
     this->imageScene = new ImageScene;
-    this->ui->imageView->setScene(this->imageScene);
+    this->ui.imageView->setScene(this->imageScene);
 
-    this->connect(this->ui->actionOpen,   SIGNAL(activated()), this, SLOT(openImage()));
-    this->connect(this->ui->actionClose,  SIGNAL(activated()), this, SLOT(closeImage()));
-    this->connect(this->ui->actionSave,   SIGNAL(activated()), this, SLOT(saveImage()));
-    this->connect(this->ui->actionSaveAs, SIGNAL(activated()), this, SLOT(saveImageAs()));
+    this->connect(this->ui.actionOpen,   SIGNAL(activated()), this, SLOT(openImage()));
+    this->connect(this->ui.actionClose,  SIGNAL(activated()), this, SLOT(closeImage()));
+    this->connect(this->ui.actionSave,   SIGNAL(activated()), this, SLOT(saveImage()));
+    this->connect(this->ui.actionSaveAs, SIGNAL(activated()), this, SLOT(saveImageAs()));
 
-    this->connect(this->ui->actionContrastLinear, SIGNAL(activated()), this, SLOT(linearContrastCorrection()));
-    this->connect(this->ui->actionContrastRGB, SIGNAL(activated()), this, SLOT(rgbContrastCorrection()));
+    this->connect(this->ui.actionContrastLinear, SIGNAL(activated()), this, SLOT(linearContrastCorrection()));
+    this->connect(this->ui.actionContrastRGB, SIGNAL(activated()), this, SLOT(rgbContrastCorrection()));
+    this->connect(this->ui.actionCustomFilter, SIGNAL(activated()), this, SLOT(applyFilter()));
 }
 
 EditorWindow::~EditorWindow() {
-    delete this->ui;
     delete this->imageScene;
 }
 
@@ -85,4 +85,12 @@ void EditorWindow::linearContrastCorrection() {
 
 void EditorWindow::rgbContrastCorrection() {
     this->replaceImage(Processing::rgbContrastCorrection(this->currentImage));
+}
+
+void EditorWindow::applyFilter() {
+    FilterDialog dialog(this);
+
+    if (dialog.exec()) {
+        this->replaceImage(Processing::applyFilter(this->currentImage, dialog.getFilter()));
+    }
 }

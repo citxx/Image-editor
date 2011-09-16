@@ -5,7 +5,7 @@
 #include <QVector>
 
 namespace Processing {
-    typedef QVector <QVector <double> > Filter;
+    typedef QVector <QVector <qreal> > Filter;
 
     QImage linearContrastCorrection(const QImage &img);
     QImage rgbContrastCorrection(const QImage &img);
