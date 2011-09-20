@@ -7,7 +7,7 @@ FIND_PACKAGE(Qt4 REQUIRED)
 INCLUDE(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 
-set(SOURCES main.cpp EditorWindow.cpp ImageScene.cpp Processing.cpp FilterDialog.cpp)
+set(SOURCES main.cpp EditorWindow.cpp ImageScene.cpp Processing.cpp FilterDialog.cpp Filter.cpp)
 set(MOC_HEADERS EditorWindow.hpp ImageScene.hpp FilterDialog.hpp)
 set(FORMS EditorWindow.ui FilterDialog.ui)
 
