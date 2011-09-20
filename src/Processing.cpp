@@ -6,6 +6,8 @@
 #include <cmath>
 #include <QtCore/qmath.h>
 
+QRgb DEFAULT_COLOR = qRgb(0, 0, 0);
+
 qreal brightness(QRgb color) {
     return 0.2125 * qRed(color) + 0.7154 * qGreen(color) + 0.0721 * qBlue(color);
 }
@@ -148,4 +150,101 @@ QImage Processing::unsharp(const QImage &img, qreal alpha, qreal sigma) {
     Filter unsharpFilter = (1 + alpha) * Filter::single(gaussian) - alpha * gaussian;
 
     return Processing::applyFilter(img, unsharpFilter);
+}
+
+qreal linearInterpolation(
+    qreal left,
+    qreal right,
+    qreal leftValue,
+    qreal rightValue,
+    qreal x) {
+
+    return ((x - left) * leftValue + (right - x) * rightValue) / (right - left);
+}
+
+qreal belinearInterpolation(
+    QRect r,
+    qreal ltValue,
+    qreal lbValue,
+    qreal rbValue,
+    qreal rtValue,
+    qreal x, qreal y) {
+
+    qreal p1 = linearInterpolation(r.left(), r.right(), ltValue, rtValue, x);
+    qreal p2 = linearInterpolation(r.left(), r.right(), lbValue, rbValue, x);
+    return linearInterpolation(r.top(), r.bottom(), p1, p2, y);
+}
+
+QRgb belinearColorInterpolation(
+    QRect rt,
+    QRgb ltValue,
+    QRgb lbValue,
+    QRgb rbValue,
+    QRgb rtValue,
+    qreal x, qreal y) {
+
+    int r = (int)belinearInterpolation(rt, qRed(ltValue),
+                                           qRed(lbValue),
+                                           qRed(rbValue),
+                                           qRed(rtValue), x, y);
+    int g = (int)belinearInterpolation(rt, qGreen(ltValue),
+                                           qGreen(lbValue),
+                                           qGreen(rbValue),
+                                           qGreen(rtValue), x, y);
+    int b = (int)belinearInterpolation(rt, qBlue(ltValue),
+                                           qBlue(lbValue),
+                                           qBlue(rbValue),
+                                           qBlue(rtValue), x, y);
+    return qRgb(r, g, b);
+}
+
+QImage Processing::rotate(const QImage &img, QPointF center, qreal angle, QRect area) {
+    if (area.isNull()) {
+        area = img.rect();
+    }
+
+    QImage result(img);
+
+    for (int x = area.left(); x <= area.right(); x++) {
+        for (int y = area.top(); y <= area.bottom(); y++) {
+            result.setPixel(x, y, DEFAULT_COLOR);
+        }
+    }
+
+    for (int x = 0; x < img.width(); x++) {
+        for (int y = 0; y < img.height(); y++) {
+            QPointF relative = QPointF(x, y) - center;
+            qreal sourceX = center.x() + relative.x() * qCos(-angle) + relative.y() * qSin(-angle);
+            qreal sourceY = center.y() - relative.x() * qSin(-angle) + relative.y() * qCos(-angle);
+
+            if (QRectF(area).contains(sourceX, sourceY)) {
+                int left, top;
+
+                if ((int)sourceX + 1 > area.right()) {
+                    left = (int)sourceX - 1;
+                }
+                else {
+                    left = (int)sourceX;
+                }
+
+                if ((int)sourceY + 1 > area.bottom()) {
+                    top = (int)sourceX - 1;
+                }
+                else {
+                    top = (int)sourceX;
+                }
+
+                result.setPixel(x, y, belinearColorInterpolation(
+                    QRect(left, top, 1, 1),
+                    img.pixel(left, top),
+                    img.pixel(left, top + 1),
+                    img.pixel(left + 1, top + 1),
+                    img.pixel(left + 1, top),
+                    sourceX, sourceY
+                ));
+            }
+        }
+    }
+
+    return result;
 }
