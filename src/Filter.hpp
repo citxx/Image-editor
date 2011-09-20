@@ -11,6 +11,8 @@ class Filter {
     Filter(int width, int height);
     Filter(const Filter &filter);
 
+    static Filter single(int width, int height);
+
     const qreal & at(int x, int y) const;
     qreal & at(int x, int y);
 
@@ -22,5 +24,11 @@ class Filter {
 
     Filter & operator =(const Filter &filter);
 };
+
+Filter operator -(const Filter &filter);
+Filter operator +(const Filter &f, const Filter &g);
+Filter operator -(const Filter &f, const Filter &g);
+Filter operator *(qreal a, const Filter &f);
+Filter operator *(const Filter &f, qreal a);
 
 #endif  // FILTER_HPP

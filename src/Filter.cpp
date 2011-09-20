@@ -14,6 +14,12 @@ Filter::Filter(const Filter &filter):
     kernel(filter.kernel) {
 }
 
+Filter Filter::single(int width, int height) {
+    Filter result(width, height);
+    result.at(width / 2, height / 2) = 1.0;
+    return result;
+}
+
 const qreal & Filter::at(int x, int y) const {
     return this->kernel[x][y];
 }
@@ -68,4 +74,60 @@ Filter Filter::transposed() const {
 Filter & Filter::operator =(const Filter &filter) {
     this->kernel = filter.kernel;
     return *this;
+}
+
+Filter operator -(const Filter &f) {
+    Filter result(f);
+
+    for(int x = 0; x < result.width(); x++) {
+        for (int y = 0; y < result.height(); y++) {
+            result.at(x, y) = -f.at(x, y);
+        }
+    }
+
+    return result;
+}
+
+Filter operator +(const Filter &f, const Filter &g) {
+    int w = qMin(f.width(), g.width());
+    int h = qMin(f.height(), g.height());
+
+    Filter result(w, h);
+    for (int x = 0; x < w; x++) {
+        for (int y = 0; y < h; y++) {
+            result.at(x, y) = f.at(x, y) + g.at(x, y);
+        }
+    }
+
+    return result;
+}
+
+Filter operator -(const Filter &f, const Filter &g) {
+    int w = qMin(f.width(), g.width());
+    int h = qMin(f.height(), g.height());
+
+    Filter result(w, h);
+    for (int x = 0; x < w; x++) {
+        for (int y = 0; y < h; y++) {
+            result.at(x, y) = f.at(x, y) - g.at(x, y);
+        }
+    }
+
+    return result;
+}
+
+Filter operator *(qreal a, const Filter &f) {
+    Filter result(f);
+
+    for(int x = 0; x < result.width(); x++) {
+        for (int y = 0; y < result.height(); y++) {
+            result.at(x, y) = a * f.at(x, y);
+        }
+    }
+
+    return result;
+}
+
+Filter operator *(const Filter &f, qreal a) {
+    return a * f;
 }
