@@ -9,14 +9,14 @@
 Processing::Filter Processing::normalized(Processing::Filter filter) {
     qreal sum = 0.0;
     for (int i = 0; i < filter.size(); i++) {
-        for (int j = 0; j < filter[i].size(); i++) {
+        for (int j = 0; j < filter[i].size(); j++) {
             sum += filter[i][j];
         }
     }
 
     Filter normalizedFilter(filter);
     for (int i = 0; i < filter.size(); i++) {
-        for (int j = 0; j < filter[i].size(); i++) {
+        for (int j = 0; j < filter[i].size(); j++) {
             normalizedFilter[i][j] = filter[i][j] / sum;
         }
     }
@@ -27,7 +27,7 @@ Processing::Filter Processing::normalized(Processing::Filter filter) {
 Processing::Filter Processing::transposed(Processing::Filter filter) {
     Processing::Filter transposedFilter(filter[0].size(), QVector <qreal>(filter.size()));
     for (int i = 0; i < filter.size(); i++) {
-        for (int j = 0; j < filter[i].size(); i++) {
+        for (int j = 0; j < filter[i].size(); j++) {
             transposedFilter[j][i] = filter[i][j];
         }
     }
@@ -165,6 +165,9 @@ QImage Processing::gaussianBlur(const QImage &img, qreal sigma) {
 
     Processing::Filter filterY = Processing::normalized(Processing::Filter(1, factors));
     Processing::Filter filterX = Processing::transposed(filterY);
+
+    qDebug() << "Gaussian blur: filterX(" << filterX <<
+                ") filterY(" << filterY << ")";
 
     return Processing::applyFilter(Processing::applyFilter(img, filterX), filterY);
 }
