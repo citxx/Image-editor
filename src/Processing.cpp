@@ -4,7 +4,7 @@
 #include <QRect>
 #include <QDebug>
 
-Filter Processing::normalized(Filter filter) {
+Processing::Filter Processing::normalized(Processing::Filter filter) {
     qreal sum = 0.0;
     for (int i = 0; i < filter.size(); i++) {
         for (int j = 0; j < filter[i].size(); i++) {
@@ -22,7 +22,7 @@ Filter Processing::normalized(Filter filter) {
     return normalizedFilter;
 }
 
-Filter transposed(Filter filter) {
+Processing::Filter transposed(Processing::Filter filter) {
     Filter transposedFilter(filter[0].size(), QVector(filter.size()));
     for (int i = 0; i < filter.size(); i++) {
         for (int j = 0; j < filter[i].size(); i++) {
@@ -154,5 +154,5 @@ QImage Processing::gaussianBlur(qreal sigma) {
         filterSize += 1;
     }
 
-
+//    Processing::Filter filter =
 }
