@@ -117,6 +117,10 @@ QImage Processing::applyFilter(const QImage &img, const Filter &filter) {
     return answer;
 }
 
+QImage Processing::applySimpleSeparateFilter(const QImage &img, const Filter &filter) {
+    return applyFilter(applyFilter(img, filter), filter.transposed());
+}
+
 Filter getGaussianFilter(qreal sigma) {
     int filterSize = (int)(6 * sigma);
     if (filterSize % 2 == 0) {
@@ -134,11 +138,7 @@ Filter getGaussianFilter(qreal sigma) {
 }
 
 QImage Processing::gaussianBlur(const QImage &img, qreal sigma) {
-
-    Filter filterY = getGaussianFilter(sigma);
-    Filter filterX = filterY.transposed();
-
     qDebug() << "Gaussian blur: sigma(" << sigma << ")";
 
-    return Processing::applyFilter(Processing::applyFilter(img, filterX), filterY);
+    return Processing::applySimpleSeparateFilter(img, getGaussianFilter(sigma));
 }

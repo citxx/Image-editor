@@ -11,6 +11,7 @@ namespace Processing {
     QImage rgbContrastCorrection(const QImage &img);
 
     QImage applyFilter(const QImage &img, const Filter &filter);
+    QImage applySimpleSeparateFilter(const QImage &img, const Filter &filter);
     QImage gaussianBlur(const QImage &img, qreal sigma);
     QImage unsharp(const QImage &img, qreal alpha);
 }
