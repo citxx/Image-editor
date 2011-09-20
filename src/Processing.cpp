@@ -23,7 +23,7 @@ Processing::Filter Processing::normalized(Processing::Filter filter) {
 }
 
 Processing::Filter transposed(Processing::Filter filter) {
-    Filter transposedFilter(filter[0].size(), QVector(filter.size()));
+    Filter transposedFilter(filter[0].size(), QVector <qreal>(filter.size()));
     for (int i = 0; i < filter.size(); i++) {
         for (int j = 0; j < filter[i].size(); i++) {
             transposedFilter[j][i] = filter[i][j];
@@ -154,5 +154,6 @@ QImage Processing::gaussianBlur(qreal sigma) {
         filterSize += 1;
     }
 
-//    Processing::Filter filter =
+    QVector filterX(1, QVector(filterSize));
+
 }
