@@ -14,7 +14,7 @@ namespace Processing {
     QImage rgbContrastCorrection(const QImage &img);
 
     QImage applyFilter(const QImage &img, const Processing::Filter &kernel);
-    QImage gaussianBlur(qreal sigma);
+    QImage gaussianBlur(const QImage &img, qreal sigma);
 }
 
 #endif  // PROCESSING_HPP

@@ -3,6 +3,8 @@
 #include <QPoint>
 #include <QRect>
 #include <QDebug>
+#include <cmath>
+#include <QtCore/qmath.h>
 
 Processing::Filter Processing::normalized(Processing::Filter filter) {
     qreal sum = 0.0;
@@ -22,8 +24,8 @@ Processing::Filter Processing::normalized(Processing::Filter filter) {
     return normalizedFilter;
 }
 
-Processing::Filter transposed(Processing::Filter filter) {
-    Filter transposedFilter(filter[0].size(), QVector <qreal>(filter.size()));
+Processing::Filter Processing::transposed(Processing::Filter filter) {
+    Processing::Filter transposedFilter(filter[0].size(), QVector <qreal>(filter.size()));
     for (int i = 0; i < filter.size(); i++) {
         for (int j = 0; j < filter[i].size(); i++) {
             transposedFilter[j][i] = filter[i][j];
@@ -148,12 +150,21 @@ QImage Processing::applyFilter(const QImage &img, const Processing::Filter &kern
     return answer;
 }
 
-QImage Processing::gaussianBlur(qreal sigma) {
+QImage Processing::gaussianBlur(const QImage &img, qreal sigma) {
     int filterSize = (int)(6 * sigma);
     if (filterSize % 2 == 0) {
         filterSize += 1;
     }
 
-    QVector filterX(1, QVector(filterSize));
+    QVector <qreal> factors(filterSize);
+    int center = filterSize / 2;
+    for (int i = 0; i < filterSize; i++) {
+        int x = i - center;
+        factors[i] = qExp(-(x * x) / (2 * sigma * sigma)) / (qSqrt(2 * M_PI) * sigma);
+    }
 
+    Processing::Filter filterY = Processing::normalized(Processing::Filter(1, factors));
+    Processing::Filter filterX = Processing::transposed(filterY);
+
+    return Processing::applyFilter(Processing::applyFilter(img, filterX), filterY);
 }
