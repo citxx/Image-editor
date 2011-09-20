@@ -6,36 +6,6 @@
 #include <cmath>
 #include <QtCore/qmath.h>
 
-Processing::Filter Processing::normalized(Processing::Filter filter) {
-    qreal sum = 0.0;
-    for (int i = 0; i < filter.size(); i++) {
-        for (int j = 0; j < filter[i].size(); j++) {
-            sum += filter[i][j];
-        }
-    }
-
-    Filter normalizedFilter(filter);
-    for (int i = 0; i < filter.size(); i++) {
-        for (int j = 0; j < filter[i].size(); j++) {
-            normalizedFilter[i][j] = filter[i][j] / sum;
-        }
-    }
-
-    return normalizedFilter;
-}
-
-Processing::Filter Processing::transposed(Processing::Filter filter) {
-    Processing::Filter transposedFilter(filter[0].size(), QVector <qreal>(filter.size()));
-    for (int i = 0; i < filter.size(); i++) {
-        for (int j = 0; j < filter[i].size(); j++) {
-            transposedFilter[j][i] = filter[i][j];
-        }
-    }
-
-    return transposedFilter;
-
-}
-
 qreal brightness(QRgb color) {
     return 0.2125 * qRed(color) + 0.7154 * qGreen(color) + 0.0721 * qBlue(color);
 }
@@ -116,19 +86,16 @@ QImage Processing::rgbContrastCorrection(const QImage &img) {
     return answer;
 }
 
-QRgb applyToPoint(int x, int y, const QImage &img, const Processing::Filter &kernel) {
-    int filterWidth = kernel.size();
-    int filterHeight = kernel[0].size();
-
+QRgb applyToPoint(int x, int y, const QImage &img, const Filter &filter) {
     qreal resultR = 0.0, resultG = 0.0, resultB = 0.0;
-    for (int fx = 0; fx < filterWidth; fx++) {
-        for (int fy = 0; fy < filterHeight; fy++) {
-            int imgX = qBound(0, x + (fx - filterWidth / 2), img.width() - 1);
-            int imgY = qBound(0, y + (fy - filterHeight / 2), img.height() - 1);
+    for (int fx = 0; fx < filter.width(); fx++) {
+        for (int fy = 0; fy < filter.height(); fy++) {
+            int imgX = qBound(0, x + (fx - filter.width() / 2), img.width() - 1);
+            int imgY = qBound(0, y + (fy - filter.height() / 2), img.height() - 1);
             QRgb color = img.pixel(imgX, imgY);
-            resultR += kernel[fx][fy] * qRed(color);
-            resultG += kernel[fx][fy] * qGreen(color);
-            resultB += kernel[fx][fy] * qBlue(color);
+            resultR += filter.at(fx, fy) * qRed(color);
+            resultG += filter.at(fx, fy) * qGreen(color);
+            resultB += filter.at(fx, fy) * qBlue(color);
         }
     }
 
@@ -138,36 +105,47 @@ QRgb applyToPoint(int x, int y, const QImage &img, const Processing::Filter &ker
     return qRgb(r, g, b);
 }
 
-QImage Processing::applyFilter(const QImage &img, const Processing::Filter &kernel) {
+QImage Processing::applyFilter(const QImage &img, const Filter &filter) {
     QImage answer(img.size(), img.format());
 
     for (int x = 0; x < img.width(); x++) {
         for (int y = 0; y < img.height(); y++) {
-            answer.setPixel(x, y, applyToPoint(x, y, img, kernel));
+            answer.setPixel(x, y, applyToPoint(x, y, img, filter));
         }
     }
 
     return answer;
 }
 
-QImage Processing::gaussianBlur(const QImage &img, qreal sigma) {
+QImage Processing::applySimpleSeparateFilter(const QImage &img, const Filter &filter) {
+    return applyFilter(applyFilter(img, filter), filter.transposed());
+}
+
+Filter getGaussianFilter(qreal sigma) {
     int filterSize = (int)(6 * sigma);
     if (filterSize % 2 == 0) {
         filterSize += 1;
     }
 
-    QVector <qreal> factors(filterSize);
+    Filter gaussian(1, filterSize);
     int center = filterSize / 2;
     for (int i = 0; i < filterSize; i++) {
         int x = i - center;
-        factors[i] = qExp(-(x * x) / (2 * sigma * sigma)) / (qSqrt(2 * M_PI) * sigma);
+        gaussian.at(0, i) = qExp(-(x * x) / (2 * sigma * sigma)) / (qSqrt(2 * M_PI) * sigma);
     }
 
-    Processing::Filter filterY = Processing::normalized(Processing::Filter(1, factors));
-    Processing::Filter filterX = Processing::transposed(filterY);
+    return gaussian.normalized();
+}
 
-    qDebug() << "Gaussian blur: filterX(" << filterX <<
-                ") filterY(" << filterY << ")";
+QImage Processing::gaussianBlur(const QImage &img, qreal sigma) {
+    qDebug() << "Gaussian blur: sigma(" << sigma << ")";
 
-    return Processing::applyFilter(Processing::applyFilter(img, filterX), filterY);
+    return Processing::applySimpleSeparateFilter(img, getGaussianFilter(sigma));
+}
+
+QImage Processing::unsharp(const QImage &img, qreal alpha, qreal sigma) {
+    Filter gaussian = getGaussianFilter(sigma);
+    Filter unsharpFilter = (1 + alpha) * Filter::single(gaussian) - alpha * gaussian;
+
+    return Processing::applyFilter(img, unsharpFilter);
 }

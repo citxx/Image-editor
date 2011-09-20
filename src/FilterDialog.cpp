@@ -80,15 +80,11 @@ void FilterDialog::resizeHeight(int height) {
 }
 
 void FilterDialog::apply() {
-    this->result.resize(this->inputMatrix.size());
+    this->result = Filter(this->inputMatrix[0].size(), this->inputMatrix.size());
 
-    for (int i = 0; i < this->result.size(); i++) {
-        this->result[i].resize(this->inputMatrix[i].size());
-    }
-
-    for (int i = 0; i < this->result.size(); i++) {
-        for (int j = 0; j < this->result[i].size(); j++) {
-            this->result[i][j] = this->inputMatrix[i][j]->value();
+    for (int x = 0; x < this->result.width(); x++) {
+        for (int y = 0; y < this->result.height(); y++) {
+            this->result.at(x, y) = this->inputMatrix[x][y]->value();
         }
     }
 
@@ -96,24 +92,15 @@ void FilterDialog::apply() {
 }
 
 void FilterDialog::applyNormalized() {
-    this->result.resize(this->inputMatrix.size());
+    this->result = Filter(this->inputMatrix[0].size(), this->inputMatrix.size());
 
-    for (int i = 0; i < this->result.size(); i++) {
-        this->result[i].resize(this->inputMatrix[i].size());
-    }
-
-    qreal sum = 0.0;
-    for (int i = 0; i < this->result.size(); i++) {
-        for (int j = 0; j < this->result[i].size(); j++) {
-            sum += this->inputMatrix[i][j]->value();
+    for (int x = 0; x < this->result.width(); x++) {
+        for (int y = 0; y < this->result.height(); y++) {
+            this->result.at(x, y) = this->inputMatrix[x][y]->value();
         }
     }
 
-    for (int i = 0; i < this->result.size(); i++) {
-        for (int j = 0; j < this->result[i].size(); j++) {
-            this->result[i][j] = this->inputMatrix[i][j]->value() / sum;
-        }
-    }
+    this->result = this->result.normalized();
 
     this->done(QDialog::Accepted);
 }
@@ -122,6 +109,6 @@ void FilterDialog::cancel() {
     this->done(QDialog::Rejected);
 }
 
-Processing::Filter FilterDialog::getFilter() {
+Filter FilterDialog::getFilter() {
     return this->result;
 }

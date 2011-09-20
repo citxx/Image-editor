@@ -62,6 +62,7 @@
      <addaction name="actionCustomFilter"/>
      <addaction name="separator"/>
      <addaction name="actionGaussianBlur"/>
+     <addaction name="actionUnsharp"/>
     </widget>
     <addaction name="menuContrast_correction"/>
     <addaction name="menuFilters"/>
@@ -155,6 +156,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+G</string>
+   </property>
+  </action>
+  <action name="actionUnsharp">
+   <property name="text">
+    <string>Unsharp</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+U</string>
    </property>
   </action>
  </widget>

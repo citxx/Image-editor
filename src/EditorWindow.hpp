@@ -31,6 +31,7 @@ class EditorWindow: public QMainWindow {
 
     void applyFilter();
     void gaussianBlur();
+    void unsharp();
 
   public:
     EditorWindow(QWidget *parent = NULL);

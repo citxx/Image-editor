@@ -16,7 +16,7 @@ class FilterDialog: public QDialog {
     QVector <QVector <QDoubleSpinBox *> > inputMatrix;
     QVector <QVector <QLabel *> > normalizedMatrix;
 
-    Processing::Filter result;
+    Filter result;
 
     void resize(int width, int height);
 
@@ -32,7 +32,7 @@ class FilterDialog: public QDialog {
   public:
     FilterDialog(QWidget *parent = NULL);
 
-    Processing::Filter getFilter();
+    Filter getFilter();
 };
 
 #endif  // FILTER_DIALOG_HPP
