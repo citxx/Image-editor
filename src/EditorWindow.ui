@@ -61,6 +61,7 @@
      </property>
      <addaction name="actionCustomFilter"/>
      <addaction name="separator"/>
+     <addaction name="actionGaussianBlur"/>
     </widget>
     <addaction name="menuContrast_correction"/>
     <addaction name="menuFilters"/>
@@ -119,30 +120,41 @@
     <string>Linear</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+L</string>
+    <string>Ctrl+Shift+L</string>
    </property>
   </action>
   <action name="actionContrastRGB">
    <property name="text">
     <string>RGB</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+R</string>
-   </property>
   </action>
   <action name="actionCustomFilter">
    <property name="text">
     <string>Custom</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+C</string>
    </property>
   </action>
   <action name="actionRotate">
    <property name="text">
     <string>Rotate</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+R</string>
+   </property>
   </action>
   <action name="actionScale">
    <property name="text">
     <string>Scale</string>
+   </property>
+  </action>
+  <action name="actionGaussianBlur">
+   <property name="text">
+    <string>Gaussian blur</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+G</string>
    </property>
   </action>
  </widget>

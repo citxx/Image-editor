@@ -20,7 +20,7 @@ class EditorWindow: public QMainWindow {
 
     void replaceImage(const QImage &img);
 
-  public slots:
+  private slots:
     void openImage();
     void closeImage();
     void saveImage();
@@ -30,6 +30,7 @@ class EditorWindow: public QMainWindow {
     void rgbContrastCorrection();
 
     void applyFilter();
+    void gaussianBlur();
 
   public:
     EditorWindow(QWidget *parent = NULL);

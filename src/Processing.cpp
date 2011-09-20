@@ -3,6 +3,38 @@
 #include <QPoint>
 #include <QRect>
 #include <QDebug>
+#include <cmath>
+#include <QtCore/qmath.h>
+
+Processing::Filter Processing::normalized(Processing::Filter filter) {
+    qreal sum = 0.0;
+    for (int i = 0; i < filter.size(); i++) {
+        for (int j = 0; j < filter[i].size(); j++) {
+            sum += filter[i][j];
+        }
+    }
+
+    Filter normalizedFilter(filter);
+    for (int i = 0; i < filter.size(); i++) {
+        for (int j = 0; j < filter[i].size(); j++) {
+            normalizedFilter[i][j] = filter[i][j] / sum;
+        }
+    }
+
+    return normalizedFilter;
+}
+
+Processing::Filter Processing::transposed(Processing::Filter filter) {
+    Processing::Filter transposedFilter(filter[0].size(), QVector <qreal>(filter.size()));
+    for (int i = 0; i < filter.size(); i++) {
+        for (int j = 0; j < filter[i].size(); j++) {
+            transposedFilter[j][i] = filter[i][j];
+        }
+    }
+
+    return transposedFilter;
+
+}
 
 qreal brightness(QRgb color) {
     return 0.2125 * qRed(color) + 0.7154 * qGreen(color) + 0.0721 * qBlue(color);
@@ -116,4 +148,26 @@ QImage Processing::applyFilter(const QImage &img, const Processing::Filter &kern
     }
 
     return answer;
+}
+
+QImage Processing::gaussianBlur(const QImage &img, qreal sigma) {
+    int filterSize = (int)(6 * sigma);
+    if (filterSize % 2 == 0) {
+        filterSize += 1;
+    }
+
+    QVector <qreal> factors(filterSize);
+    int center = filterSize / 2;
+    for (int i = 0; i < filterSize; i++) {
+        int x = i - center;
+        factors[i] = qExp(-(x * x) / (2 * sigma * sigma)) / (qSqrt(2 * M_PI) * sigma);
+    }
+
+    Processing::Filter filterY = Processing::normalized(Processing::Filter(1, factors));
+    Processing::Filter filterX = Processing::transposed(filterY);
+
+    qDebug() << "Gaussian blur: filterX(" << filterX <<
+                ") filterY(" << filterY << ")";
+
+    return Processing::applyFilter(Processing::applyFilter(img, filterX), filterY);
 }
