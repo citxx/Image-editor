@@ -143,7 +143,7 @@ QImage Processing::gaussianBlur(const QImage &img, qreal sigma) {
     return Processing::applySimpleSeparateFilter(img, getGaussianFilter(sigma));
 }
 
-QImage unsharp(const QImage &img, qreal alpha, qreal sigma) {
+QImage Processing::unsharp(const QImage &img, qreal alpha, qreal sigma) {
     Filter gaussian = getGaussianFilter(sigma);
     Filter unsharpFilter = (1 + alpha) * Filter::single(gaussian) - alpha * gaussian;
 

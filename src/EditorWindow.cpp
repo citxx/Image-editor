@@ -21,6 +21,7 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->connect(this->ui.actionContrastRGB, SIGNAL(activated()), this, SLOT(rgbContrastCorrection()));
     this->connect(this->ui.actionCustomFilter, SIGNAL(activated()), this, SLOT(applyFilter()));
     this->connect(this->ui.actionGaussianBlur, SIGNAL(activated()), this, SLOT(gaussianBlur()));
+    this->connect(this->ui.actionUnsharp, SIGNAL(activated()), this, SLOT(unsharp()));
 }
 
 EditorWindow::~EditorWindow() {
@@ -102,5 +103,16 @@ void EditorWindow::gaussianBlur() {
     qreal sigma = QInputDialog::getDouble(this, tr("Please, enter sigma"), tr("Sigma: "), 1.0, 0.35, 4.0, 2, &ok);
     if (ok) {
         this->replaceImage(Processing::gaussianBlur(this->currentImage, sigma));
+    }
+}
+
+void EditorWindow::unsharp() {
+    bool ok;
+    qreal sigma = QInputDialog::getDouble(this, tr("Please, enter sigma"), tr("Sigma: "), 1.0, 0.35, 5.0, 2, &ok);
+    if (ok) {
+        qreal alpha = QInputDialog::getDouble(this, tr("Please, enter alpha"), tr("Alpha: "), 1.0, 0.0, 20.0, 2, &ok);
+        if (ok) {
+            this->replaceImage(Processing::unsharp(this->currentImage, alpha, sigma));
+        }
     }
 }
