@@ -8,6 +8,7 @@ namespace Processing {
     typedef QVector <QVector <qreal> > Filter;
 
     Filter normalized(Filter filter);
+    Filter transposed(Filter filter);
 
     QImage linearContrastCorrection(const QImage &img);
     QImage rgbContrastCorrection(const QImage &img);

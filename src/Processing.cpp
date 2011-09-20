@@ -22,6 +22,18 @@ Filter Processing::normalized(Filter filter) {
     return normalizedFilter;
 }
 
+Filter transposed(Filter filter) {
+    Filter transposedFilter(filter[0].size(), QVector(filter.size()));
+    for (int i = 0; i < filter.size(); i++) {
+        for (int j = 0; j < filter[i].size(); i++) {
+            transposedFilter[j][i] = filter[i][j];
+        }
+    }
+
+    return transposedFilter;
+
+}
+
 qreal brightness(QRgb color) {
     return 0.2125 * qRed(color) + 0.7154 * qGreen(color) + 0.0721 * qBlue(color);
 }
@@ -137,5 +149,10 @@ QImage Processing::applyFilter(const QImage &img, const Processing::Filter &kern
 }
 
 QImage Processing::gaussianBlur(qreal sigma) {
+    int filterSize = (int)(6 * sigma);
+    if (filterSize % 2 == 0) {
+        filterSize += 1;
+    }
+
 
 }
