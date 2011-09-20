@@ -7,6 +7,7 @@ class Filter {
     QVector <QVector <qreal> > kernel;
 
   public:
+    Filter();
     Filter(int width, int height);
     Filter(const Filter &filter);
 
@@ -18,6 +19,8 @@ class Filter {
 
     Filter normalized() const;
     Filter transposed() const;
+
+    Filter & operator =(const Filter &filter);
 };
 
 #endif  // FILTER_HPP

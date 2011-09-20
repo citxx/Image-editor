@@ -2,8 +2,12 @@
 
 #include <QtCore/qmath.h>
 
+Filter::Filter():
+    kernel(0) {
+}
+
 Filter::Filter(int width, int height):
-    kernel(height, QVector <qreal>(width, 0.0)) {
+    kernel(width, QVector <qreal>(height, 0.0)) {
 }
 
 Filter::Filter(const Filter &filter):
@@ -19,11 +23,11 @@ qreal & Filter::at(int x, int y) {
 }
 
 int Filter::width() const {
-    return this->kernel[0].size();
+    return this->kernel.size();
 }
 
 int Filter::height() const {
-    return this->kernel.size();
+    return this->kernel[0].size();
 }
 
 Filter Filter::normalized() const {
@@ -38,7 +42,7 @@ Filter Filter::normalized() const {
         return *this;
     }
     else {
-        Filter normalizedFilter(filter);
+        Filter normalizedFilter(this->width(), this->height());
         for (int x = 0; x < this->width(); x++) {
             for (int y = 0; y < this->height(); y++) {
                 normalizedFilter.at(x, y) = this->at(x, y) / sum;
@@ -49,8 +53,8 @@ Filter Filter::normalized() const {
     }
 }
 
-Filter Processing::transposed() const {
-    Filter transposedFilter(this->width(), this->height());
+Filter Filter::transposed() const {
+    Filter transposedFilter(this->height(), this->width());
     for (int x = 0; x < this->width(); x++) {
         for (int y = 0; y < this->height(); y++) {
             transposedFilter.at(y, x) = this->at(x, y);
@@ -61,3 +65,7 @@ Filter Processing::transposed() const {
 
 }
 
+Filter & Filter::operator =(const Filter &filter) {
+    this->kernel = filter.kernel;
+    return *this;
+}
