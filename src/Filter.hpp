@@ -12,6 +12,7 @@ class Filter {
     Filter(const Filter &filter);
 
     static Filter single(int width, int height);
+    static Filter single(const Filter &filter);
 
     const qreal & at(int x, int y) const;
     qreal & at(int x, int y);

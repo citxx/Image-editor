@@ -13,7 +13,7 @@ namespace Processing {
     QImage applyFilter(const QImage &img, const Filter &filter);
     QImage applySimpleSeparateFilter(const QImage &img, const Filter &filter);
     QImage gaussianBlur(const QImage &img, qreal sigma);
-    QImage unsharp(const QImage &img, qreal alpha);
+    QImage unsharp(const QImage &img, qreal alpha, qreal sigma);
 }
 
 #endif  // PROCESSING_HPP

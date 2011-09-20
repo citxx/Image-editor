@@ -20,6 +20,12 @@ Filter Filter::single(int width, int height) {
     return result;
 }
 
+Filter Filter::single(const Filter &filter) {
+    Filter result(filter.width(), filter.height());
+    result.at(filter.width() / 2, filter.height() / 2) = 1.0;
+    return result;
+}
+
 const qreal & Filter::at(int x, int y) const {
     return this->kernel[x][y];
 }
