@@ -4,6 +4,24 @@
 #include <QRect>
 #include <QDebug>
 
+Filter Processing::normalized(Filter filter) {
+    qreal sum = 0.0;
+    for (int i = 0; i < filter.size(); i++) {
+        for (int j = 0; j < filter[i].size(); i++) {
+            sum += filter[i][j];
+        }
+    }
+
+    Filter normalizedFilter(filter);
+    for (int i = 0; i < filter.size(); i++) {
+        for (int j = 0; j < filter[i].size(); i++) {
+            normalizedFilter[i][j] = filter[i][j] / sum;
+        }
+    }
+
+    return normalizedFilter;
+}
+
 qreal brightness(QRgb color) {
     return 0.2125 * qRed(color) + 0.7154 * qGreen(color) + 0.0721 * qBlue(color);
 }
@@ -116,4 +134,8 @@ QImage Processing::applyFilter(const QImage &img, const Processing::Filter &kern
     }
 
     return answer;
+}
+
+QImage Processing::gaussianBlur(qreal sigma) {
+
 }
