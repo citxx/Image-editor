@@ -4,6 +4,7 @@
 #include "ui_EditorWindow.h"
 
 #include <QFileDialog>
+#include <QInputDialog>
 
 EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->ui.setupUi(this);
@@ -19,6 +20,7 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->connect(this->ui.actionContrastLinear, SIGNAL(activated()), this, SLOT(linearContrastCorrection()));
     this->connect(this->ui.actionContrastRGB, SIGNAL(activated()), this, SLOT(rgbContrastCorrection()));
     this->connect(this->ui.actionCustomFilter, SIGNAL(activated()), this, SLOT(applyFilter()));
+    this->connect(this->ui.actionGaussianBlur, SIGNAL(activated()), this, SLOT(gaussianBlur()));
 }
 
 EditorWindow::~EditorWindow() {
@@ -92,5 +94,13 @@ void EditorWindow::applyFilter() {
 
     if (dialog.exec()) {
         this->replaceImage(Processing::applyFilter(this->currentImage, dialog.getFilter()));
+    }
+}
+
+void EditorWindow::gaussianBlur() {
+    bool ok;
+    qreal sigma = QInputDialog::getDouble(this, tr("Please, enter sigma"), tr("Sigma: "), 1.0, 0.35, 4.0, 2, &ok);
+    if (ok) {
+        this->replaceImage(Processing::gaussianBlur(this->currentImage, sigma));
     }
 }
