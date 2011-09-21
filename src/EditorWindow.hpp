@@ -33,6 +33,8 @@ class EditorWindow: public QMainWindow {
     void gaussianBlur();
     void unsharp();
 
+    void rotate();
+
   public:
     EditorWindow(QWidget *parent = NULL);
     ~EditorWindow();
