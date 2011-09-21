@@ -198,9 +198,12 @@ QRgb belinearColorInterpolation(
     return qRgb(r, g, b);
 }
 
-QImage Processing::rotate(const QImage &img, QPointF center, qreal angle, QRect area) {
+QImage Processing::rotate(const QImage &img, qreal angle, QPointF center, QRect area) {
     if (area.isNull()) {
         area = img.rect();
+    }
+    if (center.isNull()) {
+        center = QPointF(area.width() / 2.0, area.height() / 2.0);
     }
 
     QImage result(img);
