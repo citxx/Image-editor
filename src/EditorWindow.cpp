@@ -1,6 +1,7 @@
 #include "EditorWindow.hpp"
 #include "Processing.hpp"
 #include "FilterDialog.hpp"
+#include "RotateDialog.hpp"
 #include "ui_EditorWindow.h"
 
 #include <QFileDialog>
@@ -22,6 +23,8 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->connect(this->ui.actionCustomFilter, SIGNAL(activated()), this, SLOT(applyFilter()));
     this->connect(this->ui.actionGaussianBlur, SIGNAL(activated()), this, SLOT(gaussianBlur()));
     this->connect(this->ui.actionUnsharp, SIGNAL(activated()), this, SLOT(unsharp()));
+
+    this->connect(this->ui.actionRotate, SIGNAL(activated()), this, SLOT(rotate()));
 }
 
 EditorWindow::~EditorWindow() {
@@ -114,5 +117,15 @@ void EditorWindow::unsharp() {
         if (ok) {
             this->replaceImage(Processing::unsharp(this->currentImage, alpha, sigma));
         }
+    }
+}
+
+void EditorWindow::rotate() {
+    RotateDialog dialog(this);
+
+    if (dialog.exec()) {
+        qreal angle = dialog.getAngle();
+        QPointF center = dialog.getCenter();
+        this->replaceImage(Processing::rotate(this->currentImage, angle, center));
     }
 }
