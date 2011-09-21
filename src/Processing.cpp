@@ -159,7 +159,7 @@ qreal linearInterpolation(
     qreal rightValue,
     qreal x) {
 
-    return ((x - left) * leftValue + (right - x) * rightValue) / (right - left);
+    return ((x - left) * rightValue + (right - x) * leftValue) / (right - left);
 }
 
 qreal belinearInterpolation(
@@ -170,9 +170,10 @@ qreal belinearInterpolation(
     qreal rtValue,
     qreal x, qreal y) {
 
-    qreal p1 = linearInterpolation(r.left(), r.right(), ltValue, rtValue, x);
-    qreal p2 = linearInterpolation(r.left(), r.right(), lbValue, rbValue, x);
-    return linearInterpolation(r.top(), r.bottom(), p1, p2, y);
+    qreal p1 = linearInterpolation(r.left(), r.left() + r.width(), ltValue, rtValue, x);
+    qreal p2 = linearInterpolation(r.left(), r.left() + r.width(), lbValue, rbValue, x);
+    qreal result = linearInterpolation(r.top(), r.top() + r.height(), p1, p2, y);
+    return result;
 }
 
 QRgb belinearColorInterpolation(
@@ -198,15 +199,18 @@ QRgb belinearColorInterpolation(
     return qRgb(r, g, b);
 }
 
-QImage Processing::rotate(const QImage &img, qreal angle, QPointF center, QRect area) {
+QImage Processing::rotate(const QImage &img, qreal angleG, QPointF center, QRect area) {
     if (center.isNull()) {
         center = QPointF(0.0, 0.0);
     }
     if (area.isNull()) {
-        area = img.rect();
+        area = QRect(0, 0, img.width() - 1, img.height() - 1);
     }
+    qreal angle = angleG * M_PI / 180.0;
 
-    center += QPointF(area.width() / 2.0, area.height() / 2.0);
+    center += QPointF(area.left() + area.width() / 2.0, area.top() + area.height() / 2.0);
+
+    qDebug() << "Rotate: center(" << center << "), area(" << area << ")";
 
     QImage result(img);
 
@@ -216,27 +220,29 @@ QImage Processing::rotate(const QImage &img, qreal angle, QPointF center, QRect 
         }
     }
 
-    for (int x = 0; x < img.width(); x++) {
-        for (int y = 0; y < img.height(); y++) {
+    for (int x = 0; x < result.width(); x++) {
+        for (int y = 0; y < result.height(); y++) {
             QPointF relative = QPointF(x, y) - center;
             qreal sourceX = center.x() + relative.x() * qCos(-angle) + relative.y() * qSin(-angle);
             qreal sourceY = center.y() - relative.x() * qSin(-angle) + relative.y() * qCos(-angle);
 
             if (QRectF(area).contains(sourceX, sourceY)) {
                 int left, top;
+                int sx = (int)sourceX;
+                int sy = (int)sourceY;
 
-                if ((int)sourceX + 1 > area.right()) {
-                    left = (int)sourceX - 1;
+                if (sx + 1 >= area.right()) {
+                    left = sx - 1;
                 }
                 else {
-                    left = (int)sourceX;
+                    left = sx;
                 }
 
-                if ((int)sourceY + 1 > area.bottom()) {
-                    top = (int)sourceX - 1;
+                if (sy + 1 >= area.bottom()) {
+                    top = sy - 1;
                 }
                 else {
-                    top = (int)sourceX;
+                    top = sy;
                 }
 
                 result.setPixel(x, y, belinearColorInterpolation(
