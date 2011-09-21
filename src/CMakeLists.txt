@@ -7,9 +7,26 @@ FIND_PACKAGE(Qt4 REQUIRED)
 INCLUDE(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 
-set(SOURCES main.cpp EditorWindow.cpp ImageScene.cpp Processing.cpp FilterDialog.cpp Filter.cpp)
-set(MOC_HEADERS EditorWindow.hpp ImageScene.hpp FilterDialog.hpp)
-set(FORMS EditorWindow.ui FilterDialog.ui)
+set(SOURCES
+    main.cpp
+    EditorWindow.cpp
+    ImageScene.cpp
+    Processing.cpp
+    FilterDialog.cpp
+    Filter.cpp
+    RotateDialog.cpp
+)
+set(MOC_HEADERS
+    EditorWindow.hpp
+    ImageScene.hpp
+    FilterDialog.hpp
+    RotateDialog.hpp
+)
+set(FORMS
+    EditorWindow.ui
+    FilterDialog.ui
+    RotateDialog.ui
+)
 
 QT4_WRAP_CPP(HEADERS ${MOC_HEADERS})
 QT4_WRAP_UI(FORMS_HEADERS ${FORMS})

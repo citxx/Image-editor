@@ -14,6 +14,8 @@ namespace Processing {
     QImage applySimpleSeparateFilter(const QImage &img, const Filter &filter);
     QImage gaussianBlur(const QImage &img, qreal sigma);
     QImage unsharp(const QImage &img, qreal alpha, qreal sigma);
+
+    QImage rotate(const QImage &img, qreal angle, QPointF center = QPointF(), QRect area = QRect());
 }
 
 #endif  // PROCESSING_HPP
