@@ -16,6 +16,7 @@ set(SOURCES
     Filter.cpp
     RotateDialog.cpp
     ScaleDialog.cpp
+    WavesDialog.cpp
 )
 set(MOC_HEADERS
     EditorWindow.hpp
@@ -23,12 +24,14 @@ set(MOC_HEADERS
     FilterDialog.hpp
     RotateDialog.hpp
     ScaleDialog.hpp
+    WavesDialog.hpp
 )
 set(FORMS
     EditorWindow.ui
     FilterDialog.ui
     RotateDialog.ui
     ScaleDialog.ui
+    WavesDialog.ui
 )
 
 QT4_WRAP_CPP(HEADERS ${MOC_HEADERS})

@@ -38,6 +38,7 @@ class EditorWindow: public QMainWindow {
 
     void rotate();
     void scale();
+    void waves();
 
   public:
     EditorWindow(QWidget *parent = NULL);
