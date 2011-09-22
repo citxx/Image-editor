@@ -22,6 +22,8 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
 
     this->connect(this->ui.actionContrastLinear, SIGNAL(activated()), this, SLOT(linearContrastCorrection()));
     this->connect(this->ui.actionContrastRGB, SIGNAL(activated()), this, SLOT(rgbContrastCorrection()));
+    this->connect(this->ui.actionGrayWorld, SIGNAL(activated()), this, SLOT(grayWorld()));
+
     this->connect(this->ui.actionCustomFilter, SIGNAL(activated()), this, SLOT(applyFilter()));
     this->connect(this->ui.actionGaussianBlur, SIGNAL(activated()), this, SLOT(gaussianBlur()));
     this->connect(this->ui.actionUnsharp, SIGNAL(activated()), this, SLOT(unsharp()));
@@ -115,6 +117,10 @@ void EditorWindow::linearContrastCorrection() {
 
 void EditorWindow::rgbContrastCorrection() {
     this->replaceImage(Processing::rgbContrastCorrection(this->currentImage));
+}
+
+void EditorWindow::grayWorld() {
+    this->replaceImage(Processing::grayWorld(this->currentImage));
 }
 
 void EditorWindow::applyFilter() {
