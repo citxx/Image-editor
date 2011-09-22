@@ -8,6 +8,8 @@
 class ImageScene: public QGraphicsScene {
     Q_OBJECT
 
+    void centralize();
+
   public:
     ImageScene(QWidget *parent = NULL);
 
