@@ -58,6 +58,7 @@
     <addaction name="actionCustomFilter"/>
     <addaction name="actionGaussianBlur"/>
     <addaction name="actionUnsharp"/>
+    <addaction name="actionMedianFilter"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuImage"/>
@@ -153,6 +154,14 @@
   <action name="actionGrayWorld">
    <property name="text">
     <string>Gray world</string>
+   </property>
+  </action>
+  <action name="actionMedianFilter">
+   <property name="text">
+    <string>Median filter</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+M</string>
    </property>
   </action>
  </widget>

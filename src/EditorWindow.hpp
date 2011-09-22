@@ -34,6 +34,7 @@ class EditorWindow: public QMainWindow {
     void applyFilter();
     void gaussianBlur();
     void unsharp();
+    void medianFilter();
 
     void rotate();
     void scale();

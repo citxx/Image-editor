@@ -27,6 +27,7 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->connect(this->ui.actionCustomFilter, SIGNAL(activated()), this, SLOT(applyFilter()));
     this->connect(this->ui.actionGaussianBlur, SIGNAL(activated()), this, SLOT(gaussianBlur()));
     this->connect(this->ui.actionUnsharp, SIGNAL(activated()), this, SLOT(unsharp()));
+    this->connect(this->ui.actionMedianFilter, SIGNAL(activated()), this, SLOT(medianFilter()));
 
     this->connect(this->ui.actionRotate, SIGNAL(activated()), this, SLOT(rotate()));
     this->connect(this->ui.actionScale, SIGNAL(activated()), this, SLOT(scale()));
@@ -147,6 +148,14 @@ void EditorWindow::unsharp() {
         if (ok) {
             this->replaceImage(Processing::unsharp(this->currentImage, alpha, sigma));
         }
+    }
+}
+
+void EditorWindow::medianFilter() {
+    bool ok;
+    int size = QInputDialog::getInt(this, tr("Please, enter the filter size"), tr("Size: "), 3, 2, 50, 1, &ok);
+    if (ok) {
+        this->replaceImage(Processing::medianFilter(this->currentImage, size));
     }
 }
 
