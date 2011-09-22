@@ -392,6 +392,12 @@ QImage Processing::waves(const QImage &img, QPointF amplitude, qreal length, QRe
 
     QImage result(img);
 
+    for (int x = area.left(); x <= area.right(); x++) {
+        for (int y = area.top(); y <= area.bottom(); y++) {
+            result.setPixel(x, y, DEFAULT_COLOR);
+        }
+    }
+
     for (int x = 0; x < result.width(); x++) {
         for (int y = 0; y < result.height(); y++) {
             qreal ax = amplitude.x(), ay = amplitude.y();
