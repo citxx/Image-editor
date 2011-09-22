@@ -7,6 +7,7 @@
 
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QMessageBox>
 
 EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->ui.setupUi(this);
@@ -50,6 +51,7 @@ QString EditorWindow::chooseImageFile(QFileDialog::FileMode mode) {
 void EditorWindow::replaceImage(const QImage &img) {
     this->currentImage = img;
     this->imageScene->setImageMode(QPixmap::fromImage(img));
+    this->imageChanged = true;
 }
 
 void EditorWindow::openImage() {
@@ -60,30 +62,50 @@ void EditorWindow::openImage() {
         }
         this->currentImageFileName = fileName;
         this->currentImage = QImage(fileName);
+        this->imageChanged = false;
         this->imageScene->setImageMode(QPixmap::fromImage(this->currentImage));
     }
 }
 
 void EditorWindow::closeImage() {
-    // TODO: The dialog asking if the user want to save the image
+    if (this->imageChanged) {
+        QMessageBox msgBox(this);
+        msgBox.setWindowTitle(tr("Closing"));
+        msgBox.setText(tr("Do you want to save changes before closing the image?\n\nIf you don't save, your changes will be lost."));
+        msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Cancel);
+        int button = msgBox.exec();
 
-    this->currentImageFileName = QString();
-    this->currentImage = QImage();
-    this->imageScene->setEmptyMode();
+        if (button != QMessageBox::Cancel) {
+            if (button == QMessageBox::Save) {
+                this->saveImageAs();
+            }
+            this->currentImageFileName = QString();
+            this->currentImage = QImage();
+            this->imageScene->setEmptyMode();
+        }
+    }
+    else {
+        this->currentImageFileName = QString();
+        this->currentImage = QImage();
+        this->imageScene->setEmptyMode();
+    }
 }
 
 void EditorWindow::saveImage() {
-    // TODO: warning of rewriting
-
     this->currentImage.save(this->currentImageFileName);
+    this->imageChanged = false;
 }
 
 void EditorWindow::saveImageAs() {
+    // TODO: warning of rewriting
+
     QString fileName = this->chooseImageFile(QFileDialog::AnyFile);
 
     if (!fileName.isNull()) {
         this->currentImage.save(fileName);
         this->currentImageFileName = fileName;
+        this->imageChanged = false;
     }
 }
 
@@ -105,7 +127,7 @@ void EditorWindow::applyFilter() {
 
 void EditorWindow::gaussianBlur() {
     bool ok;
-    qreal sigma = QInputDialog::getDouble(this, tr("Please, enter sigma"), tr("Sigma: "), 1.0, 0.35, 4.0, 2, &ok);
+    qreal sigma = QInputDialog::getDouble(this, tr("Please, enter sigma"), tr("Sigma: "), 1.0, 0.35, 5.0, 2, &ok);
     if (ok) {
         this->replaceImage(Processing::gaussianBlur(this->currentImage, sigma));
     }

@@ -49,8 +49,9 @@ Filter Filter::normalized() const {
             sum += this->at(x, y);
         }
     }
+    sum = qAbs(sum);
 
-    if (qAbs(sum) < 1e-5) {
+    if (sum < 1e-5) {
         return *this;
     }
     else {
