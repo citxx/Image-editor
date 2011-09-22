@@ -259,3 +259,63 @@ QImage Processing::rotate(const QImage &img, qreal angleG, QPointF center, QRect
 
     return result;
 }
+
+QImage Processing::scale(const QImage &img, qreal factor, QPointF center, QRect area) {
+    if (center.isNull()) {
+        center = QPointF(0.0, 0.0);
+    }
+    if (area.isNull()) {
+        area = QRect(0, 0, img.width() - 1, img.height() - 1);
+    }
+
+    center += QPointF(area.left() + area.width() / 2.0, area.top() + area.height() / 2.0);
+
+    qDebug() << "Rotate: center(" << center << "), area(" << area << ")";
+
+    QImage result(img);
+
+    for (int x = area.left(); x <= area.right(); x++) {
+        for (int y = area.top(); y <= area.bottom(); y++) {
+            result.setPixel(x, y, DEFAULT_COLOR);
+        }
+    }
+
+    for (int x = 0; x < result.width(); x++) {
+        for (int y = 0; y < result.height(); y++) {
+            QPointF relative = QPointF(x, y) - center;
+            qreal sourceX = center.x() + relative.x() / factor;
+            qreal sourceY = center.y() + relative.y() / factor;
+
+            if (QRectF(area).contains(sourceX, sourceY)) {
+                int left, top;
+                int sx = (int)sourceX;
+                int sy = (int)sourceY;
+
+                if (sx + 1 >= area.right()) {
+                    left = sx - 1;
+                }
+                else {
+                    left = sx;
+                }
+
+                if (sy + 1 >= area.bottom()) {
+                    top = sy - 1;
+                }
+                else {
+                    top = sy;
+                }
+
+                result.setPixel(x, y, belinearColorInterpolation(
+                    QRect(left, top, 1, 1),
+                    img.pixel(left, top),
+                    img.pixel(left, top + 1),
+                    img.pixel(left + 1, top + 1),
+                    img.pixel(left + 1, top),
+                    sourceX, sourceY
+                ));
+            }
+        }
+    }
+
+    return result;
+}
