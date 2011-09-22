@@ -16,6 +16,7 @@ namespace Processing {
     QImage unsharp(const QImage &img, qreal alpha, qreal sigma);
 
     QImage rotate(const QImage &img, qreal angle, QPointF center = QPointF(), QRect area = QRect());
+    QImage scale(const QImage &img, qreal factor, QPointF center = QPointF(), QRect area = QRect());
 }
 
 #endif  // PROCESSING_HPP
