@@ -50,6 +50,7 @@
     </property>
     <addaction name="actionRotate"/>
     <addaction name="actionScale"/>
+    <addaction name="actionWaves"/>
     <addaction name="separator"/>
     <addaction name="actionContrastLinear"/>
     <addaction name="actionContrastRGB"/>
@@ -162,6 +163,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+M</string>
+   </property>
+  </action>
+  <action name="actionWaves">
+   <property name="text">
+    <string>Waves</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+W</string>
    </property>
   </action>
  </widget>

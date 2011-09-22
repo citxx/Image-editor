@@ -19,7 +19,7 @@ namespace Processing {
 
     QImage rotate(const QImage &img, qreal angle, QPointF center = QPointF(), QRect area = QRect());
     QImage scale(const QImage &img, qreal factor, QPointF center = QPointF(), QRect area = QRect());
-    QImage waves(const QImage &img, QPointF amplitude, QPointF length, QRect area = QRect());
+    QImage waves(const QImage &img, QPointF amplitude, qreal length, QRect area = QRect());
 }
 
 #endif  // PROCESSING_HPP

@@ -383,17 +383,21 @@ QImage Processing::scale(const QImage &img, qreal factor, QPointF center, QRect 
     return result;
 }
 
-QImage Processing::waves(const QImage &img, QPointF amplitude, QPointF length, QRect area) {
+QImage Processing::waves(const QImage &img, QPointF amplitude, qreal length, QRect area) {
     if (area.isNull()) {
         area = QRect(0, 0, img.width() - 1, img.height() - 1);
     }
+
+    qDebug() << "Waves: amplitude(" << amplitude << "), length(" << length << ")";
 
     QImage result(img);
 
     for (int x = 0; x < result.width(); x++) {
         for (int y = 0; y < result.height(); y++) {
-            qreal sourceX = x + amplitude.x() * qSin(2 * M_PI * y / length.x());
-            qreal sourceY = y + amplitude.y() * qSin(2 * M_PI * x / length.y());
+            qreal ax = amplitude.x(), ay = amplitude.y();
+            qreal phase = (ax * y + ay * x) / (ax + ay);
+            qreal sourceX = x + amplitude.x() * qSin(2 * M_PI * phase / length);
+            qreal sourceY = y + amplitude.y() * qSin(2 * M_PI * phase / length);
 
             if (QRectF(area).contains(sourceX, sourceY)) {
                 int left, top;
