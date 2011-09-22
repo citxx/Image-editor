@@ -12,9 +12,11 @@
 
 EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->ui.setupUi(this);
+    this->imageView = new ImageShowArea(this);
+    this->ui.centralwidget->layout()->addWidget(this->imageView);
 
     this->imageScene = new ImageScene;
-    this->ui.imageView->setScene(this->imageScene);
+    this->imageView->setScene(this->imageScene);
 
     this->connect(this->ui.actionOpen,   SIGNAL(activated()), this, SLOT(openImage()));
     this->connect(this->ui.actionClose,  SIGNAL(activated()), this, SLOT(closeImage()));
@@ -36,6 +38,7 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
 }
 
 EditorWindow::~EditorWindow() {
+    delete this->imageView;
     delete this->imageScene;
 }
 
