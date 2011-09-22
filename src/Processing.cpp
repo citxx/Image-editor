@@ -103,7 +103,7 @@ QImage Processing::grayWorld(const QImage &img) {
     qreal avgR = sumR / count, avgG = sumG / count, avgB = sumB / count;
     qreal avg = (avgR + avgG + avgB) / 3.0;
 
-    QImage result(img);
+    QImage result(img.size(), img.format());
     for (int x = 0; x < img.width(); x++) {
         for (int y = 0; y < img.height(); y++) {
             QRgb color = img.pixel(x, y);
@@ -348,6 +348,52 @@ QImage Processing::scale(const QImage &img, qreal factor, QPointF center, QRect 
             QPointF relative = QPointF(x, y) - center;
             qreal sourceX = center.x() + relative.x() / factor;
             qreal sourceY = center.y() + relative.y() / factor;
+
+            if (QRectF(area).contains(sourceX, sourceY)) {
+                int left, top;
+                int sx = (int)sourceX;
+                int sy = (int)sourceY;
+
+                if (sx + 1 >= area.right()) {
+                    left = sx - 1;
+                }
+                else {
+                    left = sx;
+                }
+
+                if (sy + 1 >= area.bottom()) {
+                    top = sy - 1;
+                }
+                else {
+                    top = sy;
+                }
+
+                result.setPixel(x, y, belinearColorInterpolation(
+                    QRect(left, top, 1, 1),
+                    img.pixel(left, top),
+                    img.pixel(left, top + 1),
+                    img.pixel(left + 1, top + 1),
+                    img.pixel(left + 1, top),
+                    sourceX, sourceY
+                ));
+            }
+        }
+    }
+
+    return result;
+}
+
+QImage Processing::waves(const QImage &img, QPointF amplitude, QPointF length, QRect area) {
+    if (area.isNull()) {
+        area = QRect(0, 0, img.width() - 1, img.height() - 1);
+    }
+
+    QImage result(img);
+
+    for (int x = 0; x < result.width(); x++) {
+        for (int y = 0; y < result.height(); y++) {
+            qreal sourceX = x + amplitude.x() * qSin(2 * M_PI * y / length.x());
+            qreal sourceY = y + amplitude.y() * qSin(2 * M_PI * x / length.y());
 
             if (QRectF(area).contains(sourceX, sourceY)) {
                 int left, top;
