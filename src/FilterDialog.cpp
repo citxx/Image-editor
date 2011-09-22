@@ -102,11 +102,11 @@ void FilterDialog::applyNormalized() {
 
     this->result = this->result.normalized();
 
-    this->done(QDialog::Accepted);
+    this->accept();
 }
 
 void FilterDialog::cancel() {
-    this->done(QDialog::Rejected);
+    this->reject();
 }
 
 Filter FilterDialog::getFilter() {
