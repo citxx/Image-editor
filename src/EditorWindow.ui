@@ -53,6 +53,7 @@
     <addaction name="separator"/>
     <addaction name="actionContrastLinear"/>
     <addaction name="actionContrastRGB"/>
+    <addaction name="actionGrayWorld"/>
     <addaction name="separator"/>
     <addaction name="actionCustomFilter"/>
     <addaction name="actionGaussianBlur"/>
@@ -147,6 +148,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+U</string>
+   </property>
+  </action>
+  <action name="actionGrayWorld">
+   <property name="text">
+    <string>Gray world</string>
    </property>
   </action>
  </widget>

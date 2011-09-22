@@ -9,6 +9,7 @@
 namespace Processing {
     QImage linearContrastCorrection(const QImage &img);
     QImage rgbContrastCorrection(const QImage &img);
+    QImage grayWorld(const QImage &img);
 
     QImage applyFilter(const QImage &img, const Filter &filter);
     QImage applySimpleSeparateFilter(const QImage &img, const Filter &filter);

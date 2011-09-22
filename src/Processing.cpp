@@ -88,6 +88,34 @@ QImage Processing::rgbContrastCorrection(const QImage &img) {
     return answer;
 }
 
+QImage Processing::grayWorld(const QImage &img) {
+    qreal sumR = 0.0, sumG = 0.0, sumB = 0.0;
+    for (int x = 0; x < img.width(); x++) {
+        for (int y = 0; y < img.height(); y++) {
+            QRgb color = img.pixel(x, y);
+            sumR += qRed(color);
+            sumG += qGreen(color);
+            sumB += qBlue(color);
+        }
+    }
+    int count = img.width() * img.height();
+    qreal avgR = sumR / count, avgG = sumG / count, avgB = sumB / count;
+    qreal avg = (avgR + avgG + avgB) / 3.0;
+
+    QImage result(img);
+    for (int x = 0; x < img.width(); x++) {
+        for (int y = 0; y < img.height(); y++) {
+            QRgb color = img.pixel(x, y);
+            int r = qBound(0, (int)(qRed(color) * avg / avgR), 255);
+            int g = qBound(0, (int)(qGreen(color) * avg / avgG), 255);
+            int b = qBound(0, (int)(qBlue(color) * avg / avgB), 255);
+            result.setPixel(x, y, qRgb(r, g, b));
+        }
+    }
+
+    return result;
+}
+
 QRgb applyToPoint(int x, int y, const QImage &img, const Filter &filter) {
     qreal resultR = 0.0, resultG = 0.0, resultB = 0.0;
     for (int fx = 0; fx < filter.width(); fx++) {

@@ -29,6 +29,7 @@ class EditorWindow: public QMainWindow {
 
     void linearContrastCorrection();
     void rgbContrastCorrection();
+    void grayWorld();
 
     void applyFilter();
     void gaussianBlur();
