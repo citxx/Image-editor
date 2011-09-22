@@ -3,6 +3,7 @@
 #include <QPoint>
 #include <QRect>
 #include <QDebug>
+#include <QtAlgorithms>
 #include <cmath>
 #include <QtCore/qmath.h>
 
@@ -225,6 +226,40 @@ QRgb belinearColorInterpolation(
                                            qBlue(rbValue),
                                            qBlue(rtValue), x, y);
     return qRgb(r, g, b);
+}
+
+bool rgbLess(const QRgb &a, const QRgb &b) {
+    return brightness(a) < brightness(b);
+}
+
+QRgb medianPoint(int x, int y, const QImage &img, int size) {
+    QList <QRgb> vicinity;
+    for (int fx = 0; fx < size; fx++) {
+        for (int fy = 0; fy < size; fy++) {
+            int imgX = x + (fx - size / 2);
+            int imgY = y + (fy - size / 2);
+            if (qBound(0, imgX, img.width() - 1) == imgX &&
+                qBound(0, imgY, img.height() - 1) == imgY) {
+                vicinity.append(img.pixel(imgX, imgY));
+            }
+        }
+    }
+
+    qSort(vicinity.begin(), vicinity.end());
+
+    return vicinity[vicinity.size() / 2];
+}
+
+QImage Processing::medianFilter(const QImage &img, int size) {
+    QImage answer(img.size(), img.format());
+
+    for (int x = 0; x < img.width(); x++) {
+        for (int y = 0; y < img.height(); y++) {
+            answer.setPixel(x, y, medianPoint(x, y, img, size));
+        }
+    }
+
+    return answer;
 }
 
 QImage Processing::rotate(const QImage &img, qreal angleG, QPointF center, QRect area) {
