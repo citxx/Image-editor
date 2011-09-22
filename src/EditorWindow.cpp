@@ -3,6 +3,7 @@
 #include "FilterDialog.hpp"
 #include "RotateDialog.hpp"
 #include "ScaleDialog.hpp"
+#include "WavesDialog.hpp"
 #include "ui_EditorWindow.h"
 
 #include <QFileDialog>
@@ -31,6 +32,7 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
 
     this->connect(this->ui.actionRotate, SIGNAL(activated()), this, SLOT(rotate()));
     this->connect(this->ui.actionScale, SIGNAL(activated()), this, SLOT(scale()));
+    this->connect(this->ui.actionWaves, SIGNAL(activated()), this, SLOT(waves()));
 }
 
 EditorWindow::~EditorWindow() {
@@ -176,5 +178,15 @@ void EditorWindow::scale() {
         qreal factor = dialog.getFactor();
         QPointF center = dialog.getCenter();
         this->replaceImage(Processing::scale(this->currentImage, factor, center));
+    }
+}
+
+void EditorWindow::waves() {
+    WavesDialog dialog(this);
+
+    if (dialog.exec()) {
+        QPointF amplitude = dialog.getAmplitude();
+        qreal length = dialog.getLength();
+        this->replaceImage(Processing::waves(this->currentImage, amplitude, length));
     }
 }
