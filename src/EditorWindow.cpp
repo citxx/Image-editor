@@ -2,6 +2,7 @@
 #include "Processing.hpp"
 #include "FilterDialog.hpp"
 #include "RotateDialog.hpp"
+#include "ScaleDialog.hpp"
 #include "ui_EditorWindow.h"
 
 #include <QFileDialog>
@@ -25,6 +26,7 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->connect(this->ui.actionUnsharp, SIGNAL(activated()), this, SLOT(unsharp()));
 
     this->connect(this->ui.actionRotate, SIGNAL(activated()), this, SLOT(rotate()));
+    this->connect(this->ui.actionScale, SIGNAL(activated()), this, SLOT(scale()));
 }
 
 EditorWindow::~EditorWindow() {
@@ -127,5 +129,15 @@ void EditorWindow::rotate() {
         qreal angle = dialog.getAngle();
         QPointF center = dialog.getCenter();
         this->replaceImage(Processing::rotate(this->currentImage, angle, center));
+    }
+}
+
+void EditorWindow::scale() {
+    ScaleDialog dialog(this);
+
+    if (dialog.exec()) {
+        qreal factor = dialog.getFactor();
+        QPointF center = dialog.getCenter();
+        this->replaceImage(Processing::scale(this->currentImage, factor, center));
     }
 }

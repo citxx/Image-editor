@@ -15,17 +15,20 @@ set(SOURCES
     FilterDialog.cpp
     Filter.cpp
     RotateDialog.cpp
+    ScaleDialog.cpp
 )
 set(MOC_HEADERS
     EditorWindow.hpp
     ImageScene.hpp
     FilterDialog.hpp
     RotateDialog.hpp
+    ScaleDialog.hpp
 )
 set(FORMS
     EditorWindow.ui
     FilterDialog.ui
     RotateDialog.ui
+    ScaleDialog.ui
 )
 
 QT4_WRAP_CPP(HEADERS ${MOC_HEADERS})
