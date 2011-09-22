@@ -7,6 +7,7 @@
 
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QMessageBox>
 
 EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->ui.setupUi(this);
@@ -65,11 +66,20 @@ void EditorWindow::openImage() {
 }
 
 void EditorWindow::closeImage() {
-    // TODO: The dialog asking if the user want to save the image
+    QMessageBox msgBox(this);
+    msgBox.setText(tr("Do you want to save changes before closing the image?\nIf you don't save, your changes will be lost."));
+    msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Cancel);
+    int button = msgBox.exec();
 
-    this->currentImageFileName = QString();
-    this->currentImage = QImage();
-    this->imageScene->setEmptyMode();
+    if (button != QMessageBox::Cancel) {
+        if (button == QMessageBox::Save) {
+            this->saveImageAs();
+        }
+        this->currentImageFileName = QString();
+        this->currentImage = QImage();
+        this->imageScene->setEmptyMode();
+    }
 }
 
 void EditorWindow::saveImage() {
