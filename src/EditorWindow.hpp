@@ -15,6 +15,7 @@ class EditorWindow: public QMainWindow {
     QImage currentImage;
     QString currentImageFileName;
     ImageScene *imageScene;
+    bool imageChanged;
 
     QString chooseImageFile(QFileDialog::FileMode);  // TODO: make static
 

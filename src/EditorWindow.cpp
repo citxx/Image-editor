@@ -51,6 +51,7 @@ QString EditorWindow::chooseImageFile(QFileDialog::FileMode mode) {
 void EditorWindow::replaceImage(const QImage &img) {
     this->currentImage = img;
     this->imageScene->setImageMode(QPixmap::fromImage(img));
+    this->imageChanged = true;
 }
 
 void EditorWindow::openImage() {
@@ -61,21 +62,30 @@ void EditorWindow::openImage() {
         }
         this->currentImageFileName = fileName;
         this->currentImage = QImage(fileName);
+        this->imageChanged = false;
         this->imageScene->setImageMode(QPixmap::fromImage(this->currentImage));
     }
 }
 
 void EditorWindow::closeImage() {
-    QMessageBox msgBox(this);
-    msgBox.setText(tr("Do you want to save changes before closing the image?\nIf you don't save, your changes will be lost."));
-    msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-    msgBox.setDefaultButton(QMessageBox::Cancel);
-    int button = msgBox.exec();
+    if (this->imageChanged) {
+        QMessageBox msgBox(this);
+        msgBox.setWindowTitle(tr("Closing"));
+        msgBox.setText(tr("Do you want to save changes before closing the image?\n\nIf you don't save, your changes will be lost."));
+        msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Cancel);
+        int button = msgBox.exec();
 
-    if (button != QMessageBox::Cancel) {
-        if (button == QMessageBox::Save) {
-            this->saveImageAs();
+        if (button != QMessageBox::Cancel) {
+            if (button == QMessageBox::Save) {
+                this->saveImageAs();
+            }
+            this->currentImageFileName = QString();
+            this->currentImage = QImage();
+            this->imageScene->setEmptyMode();
         }
+    }
+    else {
         this->currentImageFileName = QString();
         this->currentImage = QImage();
         this->imageScene->setEmptyMode();
@@ -83,17 +93,19 @@ void EditorWindow::closeImage() {
 }
 
 void EditorWindow::saveImage() {
-    // TODO: warning of rewriting
-
     this->currentImage.save(this->currentImageFileName);
+    this->imageChanged = false;
 }
 
 void EditorWindow::saveImageAs() {
+    // TODO: warning of rewriting
+
     QString fileName = this->chooseImageFile(QFileDialog::AnyFile);
 
     if (!fileName.isNull()) {
         this->currentImage.save(fileName);
         this->currentImageFileName = fileName;
+        this->imageChanged = false;
     }
 }
 
