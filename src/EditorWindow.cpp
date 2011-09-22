@@ -105,7 +105,7 @@ void EditorWindow::applyFilter() {
 
 void EditorWindow::gaussianBlur() {
     bool ok;
-    qreal sigma = QInputDialog::getDouble(this, tr("Please, enter sigma"), tr("Sigma: "), 1.0, 0.35, 4.0, 2, &ok);
+    qreal sigma = QInputDialog::getDouble(this, tr("Please, enter sigma"), tr("Sigma: "), 1.0, 0.35, 5.0, 2, &ok);
     if (ok) {
         this->replaceImage(Processing::gaussianBlur(this->currentImage, sigma));
     }
