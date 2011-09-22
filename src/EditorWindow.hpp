@@ -34,6 +34,7 @@ class EditorWindow: public QMainWindow {
     void unsharp();
 
     void rotate();
+    void scale();
 
   public:
     EditorWindow(QWidget *parent = NULL);
