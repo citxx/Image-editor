@@ -46,37 +46,21 @@
    </widget>
    <widget class="QMenu" name="menuImage">
     <property name="title">
-     <string>Image</string>
-    </property>
-    <widget class="QMenu" name="menuContrast_correction">
-     <property name="title">
-      <string>Contrast correction</string>
-     </property>
-     <addaction name="actionContrastLinear"/>
-     <addaction name="actionContrastRGB"/>
-    </widget>
-    <widget class="QMenu" name="menuFilters">
-     <property name="title">
-      <string>Filters</string>
-     </property>
-     <addaction name="actionCustomFilter"/>
-     <addaction name="separator"/>
-     <addaction name="actionGaussianBlur"/>
-     <addaction name="actionUnsharp"/>
-    </widget>
-    <addaction name="menuContrast_correction"/>
-    <addaction name="menuFilters"/>
-   </widget>
-   <widget class="QMenu" name="menuTransform">
-    <property name="title">
-     <string>Transform</string>
+     <string>Edit</string>
     </property>
     <addaction name="actionRotate"/>
     <addaction name="actionScale"/>
+    <addaction name="separator"/>
+    <addaction name="actionContrastLinear"/>
+    <addaction name="actionContrastRGB"/>
+    <addaction name="actionGrayWorld"/>
+    <addaction name="separator"/>
+    <addaction name="actionCustomFilter"/>
+    <addaction name="actionGaussianBlur"/>
+    <addaction name="actionUnsharp"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuImage"/>
-   <addaction name="menuTransform"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
@@ -118,7 +102,7 @@
   </action>
   <action name="actionContrastLinear">
    <property name="text">
-    <string>Linear</string>
+    <string>Linear contrast correction</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+L</string>
@@ -126,12 +110,12 @@
   </action>
   <action name="actionContrastRGB">
    <property name="text">
-    <string>RGB</string>
+    <string>Channel contrast correction</string>
    </property>
   </action>
   <action name="actionCustomFilter">
    <property name="text">
-    <string>Custom</string>
+    <string>Custom filter</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+C</string>
@@ -164,6 +148,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+U</string>
+   </property>
+  </action>
+  <action name="actionGrayWorld">
+   <property name="text">
+    <string>Gray world</string>
    </property>
   </action>
  </widget>
