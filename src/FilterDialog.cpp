@@ -55,19 +55,27 @@ void FilterDialog::normalize() {
     qreal sum = 0.0;
     for (int i = 0; i < this->inputMatrix.size(); i++) {
         for (int j = 0; j < this->inputMatrix[i].size(); j++) {
-            sum += inputMatrix[i][j]->value();
+            sum += this->inputMatrix[i][j]->value();
         }
     }
+    sum = qAbs(sum);
 
     for (int i = 0; i < this->inputMatrix.size(); i++) {
         for (int j = 0; j < this->inputMatrix[i].size(); j++) {
-            if (qAbs(sum) < 1e-5) {
-                normalizedMatrix[i][j]->setNum(0.0);
+            if (sum < 1e-5) {
+                this->normalizedMatrix[i][j]->setNum(0.0);
             }
             else {
-                normalizedMatrix[i][j]->setNum(inputMatrix[i][j]->value() / sum);
+                this->normalizedMatrix[i][j]->setNum(this->inputMatrix[i][j]->value() / sum);
             }
         }
+    }
+
+    if (sum < 1e-5) {
+        this->ui.pushButtonApplyNormalized->setEnabled(false);
+    }
+    else {
+        this->ui.pushButtonApplyNormalized->setEnabled(true);
     }
 }
 
