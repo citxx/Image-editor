@@ -14,12 +14,24 @@ ImageShowArea::~ImageShowArea() {
     delete this->frame;
 }
 
+QRect bound(const QPoint &start, const QPoint &end) {
+    int left   = qMin(start.x(), end.x());
+    int right  = qMax(start.x(), end.x());
+    int top    = qMin(start.y(), end.y());
+    int bottom = qMax(start.y(), end.y());
+    return QRect(QPoint(left, top), QPoint(right, bottom));
+}
+
+QRectF bound(const QPointF &start, const QPointF &end) {
+    int left   = qMin(start.x(), end.x());
+    int right  = qMax(start.x(), end.x());
+    int top    = qMin(start.y(), end.y());
+    int bottom = qMax(start.y(), end.y());
+    return QRectF(QPointF(left, top), QPointF(right, bottom));
+}
+
 void ImageShowArea::updateSelection() {
-    int left   = qMin(this->selectionStart.x(), this->selectionEnd.x());
-    int right  = qMax(this->selectionStart.x(), this->selectionEnd.x());
-    int top    = qMin(this->selectionStart.y(), this->selectionEnd.y());
-    int bottom = qMax(this->selectionStart.y(), this->selectionEnd.y());
-    this->frame->setGeometry(left, top, right - left + 1, bottom - top + 1);
+    this->frame->setGeometry(bound(this->selectionStart, this->selectionEnd));
     this->frame->show();
 }
 
@@ -41,4 +53,25 @@ void ImageShowArea::mouseReleaseEvent(QMouseEvent *event) {
     this->selectionActive = false;
     this->selectionEnd = event->pos();
     this->updateSelection();
+}
+
+QRect ImageShowArea::getSelection() {
+    QPointF start = this->mapToScene(this->selectionStart);
+    QPointF end = this->mapToScene(this->selectionEnd);
+
+    QRectF selectionRect = bound(start, end);
+    QRectF imageRect = this->scene()->itemsBoundingRect();
+    QRectF resultF = selectionRect & imageRect;
+    if (resultF.isEmpty()) {
+        resultF = imageRect;
+    }
+    return QRect((int)resultF.x(), (int)resultF.y(), (int)resultF.width(), (int)resultF.height());
+}
+
+void ImageShowArea::resetSelection() {
+    this->selectionStart = QPoint();
+    this->selectionEnd = QPoint();
+
+    delete this->frame;
+    this->frame = new QRubberBand(QRubberBand::Rectangle, this);
 }

@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QDebug>
 
 EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->ui.setupUi(this);
@@ -60,6 +61,7 @@ void EditorWindow::replaceImage(const QImage &img) {
     this->currentImage = img;
     this->imageScene->setImageMode(QPixmap::fromImage(img));
     this->imageChanged = true;
+    this->imageView->resetSelection();
 }
 
 void EditorWindow::openImage() {
@@ -170,7 +172,7 @@ void EditorWindow::rotate() {
     if (dialog.exec()) {
         qreal angle = dialog.getAngle();
         QPointF center = dialog.getCenter();
-        this->replaceImage(Processing::rotate(this->currentImage, angle, center));
+        this->replaceImage(Processing::rotate(this->currentImage, angle, center, this->imageView->getSelection()));
     }
 }
 
@@ -180,7 +182,7 @@ void EditorWindow::scale() {
     if (dialog.exec()) {
         qreal factor = dialog.getFactor();
         QPointF center = dialog.getCenter();
-        this->replaceImage(Processing::scale(this->currentImage, factor, center));
+        this->replaceImage(Processing::scale(this->currentImage, factor, center, this->imageView->getSelection()));
     }
 }
 

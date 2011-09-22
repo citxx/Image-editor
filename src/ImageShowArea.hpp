@@ -26,6 +26,8 @@ class ImageShowArea: public QGraphicsView {
     ImageShowArea(QWidget *parent = NULL);
     ~ImageShowArea();
 
+    QRect getSelection();
+    void resetSelection();
 };
 
 #endif  // IMAGE_SHOW_AREA_HPP
