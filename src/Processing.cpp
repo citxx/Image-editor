@@ -106,11 +106,10 @@ QImage Processing::grayWorld(const QImage &img) {
     for (int x = 0; x < img.width(); x++) {
         for (int y = 0; y < img.height(); y++) {
             QRgb color = img.pixel(x, y);
-            result.setPixel(x, y, qRgb(qRed(color) * avg / avgR,
-                                       qGreen(color) * avg / avgG,
-                                       qBlue(color) * avg / avgB
-                                      )
-            );
+            int r = qBound(0, (int)(qRed(color) * avg / avgR), 255);
+            int g = qBound(0, (int)(qGreen(color) * avg / avgG), 255);
+            int b = qBound(0, (int)(qBlue(color) * avg / avgB), 255);
+            result.setPixel(x, y, qRgb(r, g, b));
         }
     }
 
