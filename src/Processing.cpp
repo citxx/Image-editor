@@ -260,14 +260,13 @@ QImage Processing::rotate(const QImage &img, qreal angleG, QPointF center, QRect
     return result;
 }
 
-QImage Processing::scale(const QImage &img, qreal factor, QPointF center = QPointF(), QRect area = QRect()) {
+QImage Processing::scale(const QImage &img, qreal factor, QPointF center, QRect area) {
     if (center.isNull()) {
         center = QPointF(0.0, 0.0);
     }
     if (area.isNull()) {
         area = QRect(0, 0, img.width() - 1, img.height() - 1);
     }
-    qreal angle = angleG * M_PI / 180.0;
 
     center += QPointF(area.left() + area.width() / 2.0, area.top() + area.height() / 2.0);
 
