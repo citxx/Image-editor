@@ -76,7 +76,7 @@ void FilterDialog::resizeWidth(int width) {
 }
 
 void FilterDialog::resizeHeight(int height) {
-    this->resize(this->ui.spinBoxHeight->value(), height);
+    this->resize(this->ui.spinBoxWidth->value(), height);
 }
 
 void FilterDialog::apply() {
