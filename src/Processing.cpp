@@ -283,8 +283,8 @@ QImage Processing::scale(const QImage &img, qreal factor, QPointF center, QRect 
     for (int x = 0; x < result.width(); x++) {
         for (int y = 0; y < result.height(); y++) {
             QPointF relative = QPointF(x, y) - center;
-            qreal sourceX = center.x() + relative.x() * factor + relative.y() * factor;
-            qreal sourceY = center.y() - relative.x() * factor + relative.y() * factor;
+            qreal sourceX = center.x() + relative.x() / factor;
+            qreal sourceY = center.y() + relative.y() / factor;
 
             if (QRectF(area).contains(sourceX, sourceY)) {
                 int left, top;
