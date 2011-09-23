@@ -13,9 +13,9 @@ qreal brightness(QRgb color) {
     return 0.2125 * qRed(color) + 0.7154 * qGreen(color) + 0.0721 * qBlue(color);
 }
 
-int expand(qreal minX, qreal maxX, int x) {
-    int result = (x - minX) * 256.0 / (maxX + 1 - minX);
-    if (result < 0 || 255 < result) {
+qreal expand(qreal minX, qreal maxX, qreal x) {
+    qreal result = (x - minX) * 256.0 / (maxX + 1 - minX);
+    if (result < 0.0 || 255.0 < result) {
         qDebug() << "expand(" << minX << ", " << maxX << ", " << x <<
                            "): invalid return value (" << result << ")";
     }
@@ -28,7 +28,7 @@ QImage Processing::linearContrastCorrection(const QImage &img, QRect area) {
     }
 
     qreal minBrightness, maxBrightness;
-    minBrightness = maxBrightness = brightness(img.pixel(0,0));
+    minBrightness = maxBrightness = brightness(img.pixel(area.left(), area.top()));
     for (int x = area.left(); x <= area.right(); x++) {
         for (int y = area.top(); y <= area.bottom(); y++) {
             qreal br = brightness(img.pixel(x, y));
@@ -47,7 +47,10 @@ QImage Processing::linearContrastCorrection(const QImage &img, QRect area) {
             qreal br = brightness(color);
             qreal new_br = expand(minBrightness, maxBrightness, br);
             qreal c = new_br / br;
-            answer.setPixel(x, y, qRgb(c * qRed(color), c * qGreen(color), c * qBlue(color)));
+            int r = qBound(0, (int)(c * qRed(color)), 255);
+            int g = qBound(0, (int)(c * qGreen(color)), 255);
+            int b = qBound(0, (int)(c * qBlue(color)), 255);
+            answer.setPixel(x, y, qRgb(r, g, b));
         }
     }
 
