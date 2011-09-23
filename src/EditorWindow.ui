@@ -110,6 +110,9 @@
    <property name="text">
     <string>Channel contrast correction</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+H</string>
+   </property>
   </action>
   <action name="actionCustomFilter">
    <property name="text">
@@ -131,6 +134,9 @@
    <property name="text">
     <string>Scale</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+A</string>
+   </property>
   </action>
   <action name="actionGaussianBlur">
    <property name="text">
@@ -151,6 +157,9 @@
   <action name="actionGrayWorld">
    <property name="text">
     <string>Gray world</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Y</string>
    </property>
   </action>
   <action name="actionMedianFilter">
