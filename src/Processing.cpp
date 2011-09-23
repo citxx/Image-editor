@@ -13,20 +13,24 @@ qreal brightness(QRgb color) {
     return 0.2125 * qRed(color) + 0.7154 * qGreen(color) + 0.0721 * qBlue(color);
 }
 
-int expand(qreal minX, qreal maxX, int x) {
-    int result = (x - minX) * 256.0 / (maxX + 1 - minX);
-    if (result < 0 || 255 < result) {
+qreal expand(qreal minX, qreal maxX, qreal x) {
+    qreal result = (x - minX) * 256.0 / (maxX + 1 - minX);
+    if (result < 0.0 || 255.0 < result) {
         qDebug() << "expand(" << minX << ", " << maxX << ", " << x <<
                            "): invalid return value (" << result << ")";
     }
     return result;
 }
 
-QImage Processing::linearContrastCorrection(const QImage &img) {
+QImage Processing::linearContrastCorrection(const QImage &img, QRect area) {
+    if (area.isNull()) {
+        area = QRect(0, 0, img.width() - 1, img.height() - 1);
+    }
+
     qreal minBrightness, maxBrightness;
-    minBrightness = maxBrightness = brightness(img.pixel(0,0));
-    for (int x = 0; x < img.width(); x++) {
-        for (int y = 0; y < img.height(); y++) {
+    minBrightness = maxBrightness = brightness(img.pixel(area.left(), area.top()));
+    for (int x = area.left(); x <= area.right(); x++) {
+        for (int y = area.top(); y <= area.bottom(); y++) {
             qreal br = brightness(img.pixel(x, y));
             minBrightness = qMin(minBrightness, br);
             maxBrightness = qMax(maxBrightness, br);
@@ -36,21 +40,28 @@ QImage Processing::linearContrastCorrection(const QImage &img) {
     qDebug() << "Linear contrast correction: minBrightness(" << minBrightness <<
                 ") maxBrightness(" << maxBrightness << ")";
 
-    QImage answer(img.width(), img.height(), img.format());
-    for (int x = 0; x < img.width(); x++) {
-        for (int y = 0; y < img.height(); y++) {
+    QImage answer(img);
+    for (int x = area.left(); x <= area.right(); x++) {
+        for (int y = area.top(); y <= area.bottom(); y++) {
             QRgb color = img.pixel(x, y);
             qreal br = brightness(color);
             qreal new_br = expand(minBrightness, maxBrightness, br);
             qreal c = new_br / br;
-            answer.setPixel(x, y, qRgb(c * qRed(color), c * qGreen(color), c * qBlue(color)));
+            int r = qBound(0, (int)(c * qRed(color)), 255);
+            int g = qBound(0, (int)(c * qGreen(color)), 255);
+            int b = qBound(0, (int)(c * qBlue(color)), 255);
+            answer.setPixel(x, y, qRgb(r, g, b));
         }
     }
 
     return answer;
 }
 
-QImage Processing::rgbContrastCorrection(const QImage &img) {
+QImage Processing::rgbContrastCorrection(const QImage &img, QRect area) {
+    if (area.isNull()) {
+        area = QRect(0, 0, img.width() - 1, img.height() - 1);
+    }
+
     int minR, maxR;
     int minG, maxG;
     int minB, maxB;
@@ -58,8 +69,8 @@ QImage Processing::rgbContrastCorrection(const QImage &img) {
     minR = maxR = qRed(initColor);
     minG = maxG = qGreen(initColor);
     minB = maxB = qBlue(initColor);
-    for (int x = 0; x < img.width(); x++) {
-        for (int y = 0; y < img.height(); y++) {
+    for (int x = area.left(); x <= area.right(); x++) {
+        for (int y = area.top(); y <= area.bottom(); y++) {
             QRgb color = img.pixel(x, y);
 
             minR = qMin(minR, qRed(color));
@@ -75,9 +86,9 @@ QImage Processing::rgbContrastCorrection(const QImage &img) {
     qDebug() << "RGB contrast correction: minG(" << minG <<") maxG(" << maxG << ")";
     qDebug() << "RGB contrast correction: minB(" << minB <<") maxB(" << maxB << ")";
 
-    QImage answer(img.size(), img.format());
-    for (int x = 0; x < img.width(); x++) {
-        for (int y = 0; y < img.height(); y++) {
+    QImage answer(img);
+    for (int x = area.left(); x <= area.right(); x++) {
+        for (int y = area.top(); y <= area.bottom(); y++) {
             QRgb color = img.pixel(x, y);
             int r = expand(minR, maxR, qRed(color));
             int g = expand(minG, maxG, qGreen(color));
@@ -89,10 +100,14 @@ QImage Processing::rgbContrastCorrection(const QImage &img) {
     return answer;
 }
 
-QImage Processing::grayWorld(const QImage &img) {
+QImage Processing::grayWorld(const QImage &img, QRect area) {
+    if (area.isNull()) {
+        area = QRect(0, 0, img.width() - 1, img.height() - 1);
+    }
+
     qreal sumR = 0.0, sumG = 0.0, sumB = 0.0;
-    for (int x = 0; x < img.width(); x++) {
-        for (int y = 0; y < img.height(); y++) {
+    for (int x = area.left(); x <= area.right(); x++) {
+        for (int y = area.top(); y <= area.bottom(); y++) {
             QRgb color = img.pixel(x, y);
             sumR += qRed(color);
             sumG += qGreen(color);
@@ -103,9 +118,9 @@ QImage Processing::grayWorld(const QImage &img) {
     qreal avgR = sumR / count, avgG = sumG / count, avgB = sumB / count;
     qreal avg = (avgR + avgG + avgB) / 3.0;
 
-    QImage result(img.size(), img.format());
-    for (int x = 0; x < img.width(); x++) {
-        for (int y = 0; y < img.height(); y++) {
+    QImage result(img);
+    for (int x = area.left(); x <= area.right(); x++) {
+        for (int y = area.top(); y <= area.bottom(); y++) {
             QRgb color = img.pixel(x, y);
             int r = qBound(0, (int)(qRed(color) * avg / avgR), 255);
             int g = qBound(0, (int)(qGreen(color) * avg / avgG), 255);
@@ -136,11 +151,15 @@ QRgb applyToPoint(int x, int y, const QImage &img, const Filter &filter) {
     return qRgb(r, g, b);
 }
 
-QImage Processing::applyFilter(const QImage &img, const Filter &filter) {
-    QImage answer(img.size(), img.format());
+QImage Processing::applyFilter(const QImage &img, const Filter &filter, QRect area) {
+    if (area.isNull()) {
+        area = QRect(0, 0, img.width() - 1, img.height() - 1);
+    }
 
-    for (int x = 0; x < img.width(); x++) {
-        for (int y = 0; y < img.height(); y++) {
+    QImage answer(img);
+
+    for (int x = area.left(); x <= area.right(); x++) {
+        for (int y = area.top(); y <= area.bottom(); y++) {
             answer.setPixel(x, y, applyToPoint(x, y, img, filter));
         }
     }
@@ -148,8 +167,12 @@ QImage Processing::applyFilter(const QImage &img, const Filter &filter) {
     return answer;
 }
 
-QImage Processing::applySimpleSeparateFilter(const QImage &img, const Filter &filter) {
-    return applyFilter(applyFilter(img, filter), filter.transposed());
+QImage Processing::applySimpleSeparateFilter(const QImage &img, const Filter &filter, QRect area) {
+    if (area.isNull()) {
+        area = QRect(0, 0, img.width() - 1, img.height() - 1);
+    }
+
+    return applyFilter(applyFilter(img, filter, area), filter.transposed(), area);
 }
 
 Filter getGaussianFilter(qreal sigma) {
@@ -168,17 +191,25 @@ Filter getGaussianFilter(qreal sigma) {
     return gaussian.normalized();
 }
 
-QImage Processing::gaussianBlur(const QImage &img, qreal sigma) {
+QImage Processing::gaussianBlur(const QImage &img, qreal sigma, QRect area) {
+    if (area.isNull()) {
+        area = QRect(0, 0, img.width() - 1, img.height() - 1);
+    }
+
     qDebug() << "Gaussian blur: sigma(" << sigma << ")";
 
-    return Processing::applySimpleSeparateFilter(img, getGaussianFilter(sigma));
+    return Processing::applySimpleSeparateFilter(img, getGaussianFilter(sigma), area);
 }
 
-QImage Processing::unsharp(const QImage &img, qreal alpha, qreal sigma) {
+QImage Processing::unsharp(const QImage &img, qreal alpha, qreal sigma, QRect area) {
+    if (area.isNull()) {
+        area = QRect(0, 0, img.width() - 1, img.height() - 1);
+    }
+
     Filter gaussian = getGaussianFilter(sigma);
     Filter unsharpFilter = (1 + alpha) * Filter::single(gaussian) - alpha * gaussian;
 
-    return Processing::applyFilter(img, unsharpFilter);
+    return Processing::applyFilter(img, unsharpFilter, area);
 }
 
 qreal linearInterpolation(
@@ -250,11 +281,15 @@ QRgb medianPoint(int x, int y, const QImage &img, int size) {
     return vicinity[vicinity.size() / 2];
 }
 
-QImage Processing::medianFilter(const QImage &img, int size) {
-    QImage answer(img.size(), img.format());
+QImage Processing::medianFilter(const QImage &img, int size, QRect area) {
+    if (area.isNull()) {
+        area = QRect(0, 0, img.width() - 1, img.height() - 1);
+    }
 
-    for (int x = 0; x < img.width(); x++) {
-        for (int y = 0; y < img.height(); y++) {
+    QImage answer(img);
+
+    for (int x = area.left(); x <= area.right(); x++) {
+        for (int y = area.top(); y <= area.bottom(); y++) {
             answer.setPixel(x, y, medianPoint(x, y, img, size));
         }
     }
