@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>746</width>
-    <height>509</height>
+    <width>756</width>
+    <height>572</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -17,18 +17,14 @@
    <string>Image editor</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
-    <item>
-     <widget class="QGraphicsView" name="imageView"/>
-    </item>
-   </layout>
+   <layout class="QHBoxLayout" name="horizontalLayout_2"/>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>746</width>
+     <width>756</width>
      <height>25</height>
     </rect>
    </property>

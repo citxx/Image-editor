@@ -5,12 +5,14 @@
 #include <QFileDialog>
 #include <QImage>
 #include "ImageScene.hpp"
+#include "ImageShowArea.hpp"
 #include "ui_EditorWindow.h"
 
 class EditorWindow: public QMainWindow {
     Q_OBJECT
 
     Ui::EditorWindow ui;
+    ImageShowArea *imageView;
 
     QImage currentImage;
     QString currentImageFileName;

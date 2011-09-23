@@ -17,6 +17,7 @@ set(SOURCES
     RotateDialog.cpp
     ScaleDialog.cpp
     WavesDialog.cpp
+    ImageShowArea.cpp
 )
 set(MOC_HEADERS
     EditorWindow.hpp
@@ -25,6 +26,7 @@ set(MOC_HEADERS
     RotateDialog.hpp
     ScaleDialog.hpp
     WavesDialog.hpp
+    ImageShowArea.hpp
 )
 set(FORMS
     EditorWindow.ui
