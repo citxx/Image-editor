@@ -4,6 +4,7 @@
 #include "RotateDialog.hpp"
 #include "ScaleDialog.hpp"
 #include "WavesDialog.hpp"
+#include "UnsharpDialog.hpp"
 #include "ui_EditorWindow.h"
 
 #include <QFileDialog>
@@ -148,13 +149,12 @@ void EditorWindow::gaussianBlur() {
 }
 
 void EditorWindow::unsharp() {
-    bool ok;
-    qreal sigma = QInputDialog::getDouble(this, tr("Please, enter sigma"), tr("Sigma: "), 1.0, 0.35, 5.0, 2, &ok);
-    if (ok) {
-        qreal alpha = QInputDialog::getDouble(this, tr("Please, enter alpha"), tr("Alpha: "), 1.0, 0.0, 20.0, 2, &ok);
-        if (ok) {
-            this->replaceImage(Processing::unsharp(this->currentImage, alpha, sigma, this->imageView->getSelection()));
-        }
+    UnsharpDialog dialog(this);
+
+    if (dialog.exec()) {
+        qreal sigma = dialog.getSigma();
+        qreal alpha = dialog.getAlpha();
+        this->replaceImage(Processing::unsharp(this->currentImage, alpha, sigma, this->imageView->getSelection()));
     }
 }
 
