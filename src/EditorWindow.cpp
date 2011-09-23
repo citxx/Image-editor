@@ -37,6 +37,8 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->connect(this->ui.actionRotate, SIGNAL(activated()), this, SLOT(rotate()));
     this->connect(this->ui.actionScale, SIGNAL(activated()), this, SLOT(scale()));
     this->connect(this->ui.actionWaves, SIGNAL(activated()), this, SLOT(waves()));
+
+    this->ui.statusbar->showMessage(tr("Ready"));
 }
 
 EditorWindow::~EditorWindow() {
@@ -63,6 +65,14 @@ void EditorWindow::replaceImage(const QImage &img) {
     this->imageScene->setImageMode(QPixmap::fromImage(img));
     this->imageChanged = true;
     this->imageView->resetSelection();
+}
+
+void EditorWindow::processing() {
+    this->ui.statusbar->showMessage(tr("Processing..."));
+}
+
+void EditorWindow::ready() {
+    this->ui.statusbar->showMessage(tr("Ready"));
 }
 
 void EditorWindow::openImage() {
@@ -121,77 +131,111 @@ void EditorWindow::saveImageAs() {
 }
 
 void EditorWindow::linearContrastCorrection() {
+    this->processing();
     this->replaceImage(Processing::linearContrastCorrection(this->currentImage, this->imageView->getSelection()));
+    this->ready();
 }
 
 void EditorWindow::rgbContrastCorrection() {
+    this->processing();
     this->replaceImage(Processing::rgbContrastCorrection(this->currentImage, this->imageView->getSelection()));
+    this->ready();
 }
 
 void EditorWindow::grayWorld() {
+    this->processing();
     this->replaceImage(Processing::grayWorld(this->currentImage, this->imageView->getSelection()));
+    this->ready();
 }
 
 void EditorWindow::applyFilter() {
     FilterDialog dialog(this);
 
     if (dialog.exec()) {
+        this->processing();
+
         this->replaceImage(Processing::applyFilter(this->currentImage, dialog.getFilter(), this->imageView->getSelection()));
     }
+
+    this->ready();
 }
 
 void EditorWindow::gaussianBlur() {
     bool ok;
     qreal sigma = QInputDialog::getDouble(this, tr("Please, enter sigma"), tr("Sigma: "), 1.0, 0.35, 5.0, 2, &ok);
     if (ok) {
+        this->processing();
+
         this->replaceImage(Processing::gaussianBlur(this->currentImage, sigma, this->imageView->getSelection()));
     }
+
+    this->ready();
 }
 
 void EditorWindow::unsharp() {
     UnsharpDialog dialog(this);
 
     if (dialog.exec()) {
+        this->processing();
+
         qreal sigma = dialog.getSigma();
         qreal alpha = dialog.getAlpha();
         this->replaceImage(Processing::unsharp(this->currentImage, alpha, sigma, this->imageView->getSelection()));
     }
+
+    this->ready();
 }
 
 void EditorWindow::medianFilter() {
     bool ok;
     int size = QInputDialog::getInt(this, tr("Please, enter the filter size"), tr("Size: "), 3, 2, 50, 1, &ok);
     if (ok) {
+        this->processing();
+
         this->replaceImage(Processing::medianFilter(this->currentImage, size, this->imageView->getSelection()));
     }
+
+    this->ready();
 }
 
 void EditorWindow::rotate() {
     RotateDialog dialog(this);
 
     if (dialog.exec()) {
+        this->processing();
+
         qreal angle = dialog.getAngle();
         QPointF center = dialog.getCenter();
         this->replaceImage(Processing::rotate(this->currentImage, angle, center, this->imageView->getSelection()));
     }
+
+    this->ready();
 }
 
 void EditorWindow::scale() {
     ScaleDialog dialog(this);
 
     if (dialog.exec()) {
+        this->processing();
+
         qreal factor = dialog.getFactor();
         QPointF center = dialog.getCenter();
         this->replaceImage(Processing::scale(this->currentImage, factor, center, this->imageView->getSelection()));
     }
+
+    this->ready();
 }
 
 void EditorWindow::waves() {
     WavesDialog dialog(this);
 
     if (dialog.exec()) {
+        this->processing();
+
         QPointF amplitude = dialog.getAmplitude();
         qreal length = dialog.getLength();
         this->replaceImage(Processing::waves(this->currentImage, amplitude, length, this->imageView->getSelection()));
     }
+
+    this->ready();
 }
