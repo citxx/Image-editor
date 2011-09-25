@@ -18,6 +18,7 @@ set(SOURCES
     ScaleDialog.cpp
     WavesDialog.cpp
     ImageShowArea.cpp
+    UnsharpDialog.cpp
 )
 set(MOC_HEADERS
     EditorWindow.hpp
@@ -27,6 +28,7 @@ set(MOC_HEADERS
     ScaleDialog.hpp
     WavesDialog.hpp
     ImageShowArea.hpp
+    UnsharpDialog.hpp
 )
 set(FORMS
     EditorWindow.ui
@@ -34,6 +36,7 @@ set(FORMS
     RotateDialog.ui
     ScaleDialog.ui
     WavesDialog.ui
+    UnsharpDialog.ui
 )
 
 QT4_WRAP_CPP(HEADERS ${MOC_HEADERS})

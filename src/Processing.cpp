@@ -14,12 +14,17 @@ qreal brightness(QRgb color) {
 }
 
 qreal expand(qreal minX, qreal maxX, qreal x) {
-    qreal result = (x - minX) * 256.0 / (maxX + 1 - minX);
-    if (result < 0.0 || 255.0 < result) {
-        qDebug() << "expand(" << minX << ", " << maxX << ", " << x <<
-                           "): invalid return value (" << result << ")";
+    if (minX == maxX) {
+        return x;
     }
-    return result;
+    else {
+        qreal result = (x - minX) * 255.0 / (maxX - minX);
+        if (result < 0.0 || 255.0 < result) {
+            qDebug() << "expand(" << minX << ", " << maxX << ", " << x <<
+                               "): invalid return value (" << result << ")";
+        }
+        return result;
+    }
 }
 
 QImage Processing::linearContrastCorrection(const QImage &img, QRect area) {

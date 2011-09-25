@@ -4,6 +4,7 @@
 #include "RotateDialog.hpp"
 #include "ScaleDialog.hpp"
 #include "WavesDialog.hpp"
+#include "UnsharpDialog.hpp"
 #include "ui_EditorWindow.h"
 
 #include <QFileDialog>
@@ -36,6 +37,9 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->connect(this->ui.actionRotate, SIGNAL(activated()), this, SLOT(rotate()));
     this->connect(this->ui.actionScale, SIGNAL(activated()), this, SLOT(scale()));
     this->connect(this->ui.actionWaves, SIGNAL(activated()), this, SLOT(waves()));
+
+    this->ui.statusbar->showMessage(tr("Ready"));
+    this->setEmptyMode();
 }
 
 EditorWindow::~EditorWindow() {
@@ -64,6 +68,59 @@ void EditorWindow::replaceImage(const QImage &img) {
     this->imageView->resetSelection();
 }
 
+void EditorWindow::processing() {
+    this->ui.statusbar->showMessage(tr("Processing..."));
+}
+
+void EditorWindow::ready() {
+    this->ui.statusbar->showMessage(tr("Ready"));
+}
+
+void EditorWindow::setEmptyMode() {
+    qDebug() << "Empty mode";
+    this->ui.actionOpen->setEnabled(true);
+    this->ui.actionClose->setEnabled(false);
+    this->ui.actionSave->setEnabled(false);
+    this->ui.actionSaveAs->setEnabled(false);
+    this->ui.actionQuit->setEnabled(true);
+
+    this->ui.actionContrastLinear->setEnabled(false);
+    this->ui.actionContrastRGB->setEnabled(false);
+    this->ui.actionGrayWorld->setEnabled(false);
+
+    this->ui.actionCustomFilter->setEnabled(false);
+    this->ui.actionGaussianBlur->setEnabled(false);
+    this->ui.actionUnsharp->setEnabled(false);
+    this->ui.actionMedianFilter->setEnabled(false);
+
+    this->ui.actionRotate->setEnabled(false);
+    this->ui.actionScale->setEnabled(false);
+    this->ui.actionWaves->setEnabled(false);
+    qDebug() << "Empty mode: done";
+}
+
+void EditorWindow::setImageMode() {
+    qDebug() << "Image mode";
+    this->ui.actionOpen->setEnabled(true);
+    this->ui.actionClose->setEnabled(true);
+    this->ui.actionSave->setEnabled(true);
+    this->ui.actionSaveAs->setEnabled(true);
+    this->ui.actionQuit->setEnabled(true);
+
+    this->ui.actionContrastLinear->setEnabled(true);
+    this->ui.actionContrastRGB->setEnabled(true);
+    this->ui.actionGrayWorld->setEnabled(true);
+
+    this->ui.actionCustomFilter->setEnabled(true);
+    this->ui.actionGaussianBlur->setEnabled(true);
+    this->ui.actionUnsharp->setEnabled(true);
+    this->ui.actionMedianFilter->setEnabled(true);
+
+    this->ui.actionRotate->setEnabled(true);
+    this->ui.actionScale->setEnabled(true);
+    this->ui.actionWaves->setEnabled(true);
+}
+
 void EditorWindow::openImage() {
     QString fileName = this->chooseImageFile(QFileDialog::ExistingFile);
     if (!fileName.isNull()) {
@@ -74,6 +131,7 @@ void EditorWindow::openImage() {
         this->currentImage = QImage(fileName);
         this->imageChanged = false;
         this->imageScene->setImageMode(QPixmap::fromImage(this->currentImage));
+        this->setImageMode();
     }
 }
 
@@ -93,12 +151,14 @@ void EditorWindow::closeImage() {
             this->currentImageFileName = QString();
             this->currentImage = QImage();
             this->imageScene->setEmptyMode();
+            this->setEmptyMode();
         }
     }
     else {
         this->currentImageFileName = QString();
         this->currentImage = QImage();
         this->imageScene->setEmptyMode();
+        this->setEmptyMode();
     }
 }
 
@@ -120,78 +180,111 @@ void EditorWindow::saveImageAs() {
 }
 
 void EditorWindow::linearContrastCorrection() {
+    this->processing();
     this->replaceImage(Processing::linearContrastCorrection(this->currentImage, this->imageView->getSelection()));
+    this->ready();
 }
 
 void EditorWindow::rgbContrastCorrection() {
+    this->processing();
     this->replaceImage(Processing::rgbContrastCorrection(this->currentImage, this->imageView->getSelection()));
+    this->ready();
 }
 
 void EditorWindow::grayWorld() {
+    this->processing();
     this->replaceImage(Processing::grayWorld(this->currentImage, this->imageView->getSelection()));
+    this->ready();
 }
 
 void EditorWindow::applyFilter() {
     FilterDialog dialog(this);
 
     if (dialog.exec()) {
+        this->processing();
+
         this->replaceImage(Processing::applyFilter(this->currentImage, dialog.getFilter(), this->imageView->getSelection()));
     }
+
+    this->ready();
 }
 
 void EditorWindow::gaussianBlur() {
     bool ok;
     qreal sigma = QInputDialog::getDouble(this, tr("Please, enter sigma"), tr("Sigma: "), 1.0, 0.35, 5.0, 2, &ok);
     if (ok) {
+        this->processing();
+
         this->replaceImage(Processing::gaussianBlur(this->currentImage, sigma, this->imageView->getSelection()));
     }
+
+    this->ready();
 }
 
 void EditorWindow::unsharp() {
-    bool ok;
-    qreal sigma = QInputDialog::getDouble(this, tr("Please, enter sigma"), tr("Sigma: "), 1.0, 0.35, 5.0, 2, &ok);
-    if (ok) {
-        qreal alpha = QInputDialog::getDouble(this, tr("Please, enter alpha"), tr("Alpha: "), 1.0, 0.0, 20.0, 2, &ok);
-        if (ok) {
-            this->replaceImage(Processing::unsharp(this->currentImage, alpha, sigma, this->imageView->getSelection()));
-        }
+    UnsharpDialog dialog(this);
+
+    if (dialog.exec()) {
+        this->processing();
+
+        qreal sigma = dialog.getSigma();
+        qreal alpha = dialog.getAlpha();
+        this->replaceImage(Processing::unsharp(this->currentImage, alpha, sigma, this->imageView->getSelection()));
     }
+
+    this->ready();
 }
 
 void EditorWindow::medianFilter() {
     bool ok;
     int size = QInputDialog::getInt(this, tr("Please, enter the filter size"), tr("Size: "), 3, 2, 50, 1, &ok);
     if (ok) {
+        this->processing();
+
         this->replaceImage(Processing::medianFilter(this->currentImage, size, this->imageView->getSelection()));
     }
+
+    this->ready();
 }
 
 void EditorWindow::rotate() {
     RotateDialog dialog(this);
 
     if (dialog.exec()) {
+        this->processing();
+
         qreal angle = dialog.getAngle();
         QPointF center = dialog.getCenter();
         this->replaceImage(Processing::rotate(this->currentImage, angle, center, this->imageView->getSelection()));
     }
+
+    this->ready();
 }
 
 void EditorWindow::scale() {
     ScaleDialog dialog(this);
 
     if (dialog.exec()) {
+        this->processing();
+
         qreal factor = dialog.getFactor();
         QPointF center = dialog.getCenter();
         this->replaceImage(Processing::scale(this->currentImage, factor, center, this->imageView->getSelection()));
     }
+
+    this->ready();
 }
 
 void EditorWindow::waves() {
     WavesDialog dialog(this);
 
     if (dialog.exec()) {
+        this->processing();
+
         QPointF amplitude = dialog.getAmplitude();
         qreal length = dialog.getLength();
         this->replaceImage(Processing::waves(this->currentImage, amplitude, length, this->imageView->getSelection()));
     }
+
+    this->ready();
 }

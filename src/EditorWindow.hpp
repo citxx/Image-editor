@@ -20,8 +20,12 @@ class EditorWindow: public QMainWindow {
     bool imageChanged;
 
     QString chooseImageFile(QFileDialog::FileMode);  // TODO: make static
-
     void replaceImage(const QImage &img);
+    void processing();
+    void ready();
+
+    void setImageMode();
+    void setEmptyMode();
 
   private slots:
     void openImage();

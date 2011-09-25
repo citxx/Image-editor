@@ -60,12 +60,12 @@ QRect ImageShowArea::getSelection() {
     QPointF end = this->mapToScene(this->selectionEnd);
 
     QRectF selectionRect = bound(start, end);
-    QRectF imageRect = this->scene()->itemsBoundingRect();
+    QRectF imageRect = this->scene()->itemsBoundingRect().adjusted(0.0, 0.0, -1.0, -1.0);
     QRectF resultF = selectionRect & imageRect;
     if (resultF.isEmpty()) {
         resultF = imageRect;
     }
-    return QRect((int)resultF.x(), (int)resultF.y(), (int)resultF.width(), (int)resultF.height());
+    return resultF.toAlignedRect();
 }
 
 void ImageShowArea::resetSelection() {
