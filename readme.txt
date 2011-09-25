@@ -13,8 +13,8 @@
 Спецэффект «Волны» или «Стекло»: +
 Задание произвольного ядра фильтра в диалоге: +
 
-Система: Geany, g++, CMake, Qt Designer
-ОС: Ubuntu 11.04
+Система: Qt Creator 2.1.0 based on Qt 4.7.2
+ОС: Windows 7
 Аппаратура: Intel Core 2 Duo 1.3GHz, 3Gb, nVidia GeForce G210M 512Mb
 
 Комментарии: нет
