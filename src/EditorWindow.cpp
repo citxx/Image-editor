@@ -39,6 +39,7 @@ EditorWindow::EditorWindow(QWidget *parent): QMainWindow(parent) {
     this->connect(this->ui.actionWaves, SIGNAL(activated()), this, SLOT(waves()));
 
     this->ui.statusbar->showMessage(tr("Ready"));
+    this->setEmptyMode();
 }
 
 EditorWindow::~EditorWindow() {
@@ -75,6 +76,51 @@ void EditorWindow::ready() {
     this->ui.statusbar->showMessage(tr("Ready"));
 }
 
+void EditorWindow::setEmptyMode() {
+    qDebug() << "Empty mode";
+    this->ui.actionOpen->setEnabled(true);
+    this->ui.actionClose->setEnabled(false);
+    this->ui.actionSave->setEnabled(false);
+    this->ui.actionSaveAs->setEnabled(false);
+    this->ui.actionQuit->setEnabled(true);
+
+    this->ui.actionContrastLinear->setEnabled(false);
+    this->ui.actionContrastRGB->setEnabled(false);
+    this->ui.actionGrayWorld->setEnabled(false);
+
+    this->ui.actionCustomFilter->setEnabled(false);
+    this->ui.actionGaussianBlur->setEnabled(false);
+    this->ui.actionUnsharp->setEnabled(false);
+    this->ui.actionMedianFilter->setEnabled(false);
+
+    this->ui.actionRotate->setEnabled(false);
+    this->ui.actionScale->setEnabled(false);
+    this->ui.actionWaves->setEnabled(false);
+    qDebug() << "Empty mode: done";
+}
+
+void EditorWindow::setImageMode() {
+    qDebug() << "Image mode";
+    this->ui.actionOpen->setEnabled(true);
+    this->ui.actionClose->setEnabled(true);
+    this->ui.actionSave->setEnabled(true);
+    this->ui.actionSaveAs->setEnabled(true);
+    this->ui.actionQuit->setEnabled(true);
+
+    this->ui.actionContrastLinear->setEnabled(true);
+    this->ui.actionContrastRGB->setEnabled(true);
+    this->ui.actionGrayWorld->setEnabled(true);
+
+    this->ui.actionCustomFilter->setEnabled(true);
+    this->ui.actionGaussianBlur->setEnabled(true);
+    this->ui.actionUnsharp->setEnabled(true);
+    this->ui.actionMedianFilter->setEnabled(true);
+
+    this->ui.actionRotate->setEnabled(true);
+    this->ui.actionScale->setEnabled(true);
+    this->ui.actionWaves->setEnabled(true);
+}
+
 void EditorWindow::openImage() {
     QString fileName = this->chooseImageFile(QFileDialog::ExistingFile);
     if (!fileName.isNull()) {
@@ -85,6 +131,7 @@ void EditorWindow::openImage() {
         this->currentImage = QImage(fileName);
         this->imageChanged = false;
         this->imageScene->setImageMode(QPixmap::fromImage(this->currentImage));
+        this->setImageMode();
     }
 }
 
@@ -104,12 +151,14 @@ void EditorWindow::closeImage() {
             this->currentImageFileName = QString();
             this->currentImage = QImage();
             this->imageScene->setEmptyMode();
+            this->setEmptyMode();
         }
     }
     else {
         this->currentImageFileName = QString();
         this->currentImage = QImage();
         this->imageScene->setEmptyMode();
+        this->setEmptyMode();
     }
 }
 

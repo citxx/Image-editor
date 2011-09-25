@@ -24,6 +24,9 @@ class EditorWindow: public QMainWindow {
     void processing();
     void ready();
 
+    void setImageMode();
+    void setEmptyMode();
+
   private slots:
     void openImage();
     void closeImage();
